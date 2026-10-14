@@ -91,7 +91,7 @@ public class DatosInicialesService implements ApplicationRunner {
 
     private void configurarEstados() {
         String[] nombres = {ReclamoService.REGISTRADO, ReclamoService.CLASIFICADO, ReclamoService.ASIGNADO,
-                ReclamoService.EN_ATENCION, ReclamoService.ATENDIDO, ReclamoService.CERRADO};
+                ReclamoService.EN_ATENCION, ReclamoService.ATENDIDO, ReclamoService.CERRADO, ReclamoService.REAPERTURA_SOLICITADA};
         for (int i = 0; i < nombres.length; i++) {
             int orden = i;
             EstadoReclamo estado = estadoRepository.findByNombre(nombres[i]).orElseGet(EstadoReclamo::new);

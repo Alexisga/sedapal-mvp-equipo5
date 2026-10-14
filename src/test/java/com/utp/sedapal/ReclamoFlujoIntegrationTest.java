@@ -70,7 +70,7 @@ class ReclamoFlujoIntegrationTest {
         form.setObservaciones("El usuario confirmó la normalización del servicio.");
         var atendida = reclamoService.registrarAtencion(orden.getId(), tecnico.getId(), form,
                 tecnico.getDocumento());
-        reclamoService.cerrar(reclamo.getId(), "22222222");
+        reclamoService.cerrar(reclamo.getId(), reclamo.getUsuario().getDocumento());
 
         assertThat(atendida.getEstado()).isEqualTo(EstadoOrden.ATENDIDA);
         assertThat(reclamoService.requerir(reclamo.getId()).getEstado().getNombre())

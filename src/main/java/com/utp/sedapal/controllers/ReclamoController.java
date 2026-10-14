@@ -21,11 +21,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ReclamoController {
     private final ReclamoService reclamoService;
+    private final com.utp.sedapal.services.EvidenciaService evidenciaService;
     private final AuthService authService;
     private final NotificacionService notificacionService;
 
     public ReclamoController(ReclamoService reclamoService, AuthService authService,
-                             NotificacionService notificacionService) {
+                             NotificacionService notificacionService, com.utp.sedapal.services.EvidenciaService evidenciaService) {
+        this.evidenciaService=evidenciaService;
         this.reclamoService = reclamoService;
         this.authService = authService;
         this.notificacionService = notificacionService;
@@ -57,9 +59,7 @@ public class ReclamoController {
             return "usuario/registrar_reclamo";
         }
         try {
-            Reclamo reclamo = reclamoService.registrarReclamo(usuario.getId(), reclamoForm.getCodigoSuministro(),
-                    reclamoForm.getTipoIncidencia(), reclamoForm.getPrioridad(), reclamoForm.getDescripcion(),
-                    usuario.getDocumento());
+            Reclamo reclamo = reclamoService.registrarCiudadano(usuario.getId(), reclamoForm, usuario.getDocumento());
             redirect.addFlashAttribute("mensaje", "Reclamo registrado con código " + reclamo.getCodigo() + ".");
             return "redirect:/usuario/consultar?codigo=" + reclamo.getCodigo();
         } catch (IllegalArgumentException ex) {
@@ -76,6 +76,7 @@ public class ReclamoController {
         model.addAttribute("estados", reclamoService.listarEstados());
         Optional<Reclamo> reclamo = reclamoService.buscarPorCodigoDeUsuario(codigo, usuario.getId());
         if (reclamo.isPresent()) {
+            model.addAttribute("evidencias", evidenciaService.listar(reclamo.get().getId(), authentication.getName()));
             model.addAttribute("reclamo", reclamo.get());
             model.addAttribute("estadoIndex", reclamoService.posicionEstado(reclamo.get()));
             model.addAttribute("ordenes", reclamoService.listarOrdenesPorReclamo(reclamo.get().getId()));
@@ -98,6 +99,18 @@ public class ReclamoController {
         return "redirect:/usuario";
     }
 
+    @PostMapping("/usuario/reclamos/{id}/cerrar")
+    public String cerrar(@org.springframework.web.bind.annotation.PathVariable Long id, @RequestParam(defaultValue="false") boolean confirmar, Authentication a, RedirectAttributes r) {
+        try { if(!confirmar)throw new IllegalArgumentException("Debe confirmar expresamente el cierre."); reclamoService.cerrar(id,a.getName());r.addFlashAttribute("mensaje","Cierre confirmado."); }
+        catch(IllegalArgumentException e){r.addFlashAttribute("error",e.getMessage());}
+        return "redirect:/usuario";
+    }
+    @PostMapping("/usuario/reclamos/{id}/reapertura")
+    public String reapertura(@org.springframework.web.bind.annotation.PathVariable Long id, @RequestParam String motivo, Authentication a, RedirectAttributes r) {
+        try {reclamoService.solicitarReapertura(id,motivo,a.getName());r.addFlashAttribute("mensaje","Solicitud registrada para evaluación.");}
+        catch(IllegalArgumentException e){r.addFlashAttribute("error",e.getMessage());}
+        return "redirect:/usuario";
+    }
     private UsuarioServicio actual(Authentication authentication) {
         return authService.requerirPorDocumento(authentication.getName());
     }

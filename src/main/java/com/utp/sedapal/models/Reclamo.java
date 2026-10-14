@@ -25,6 +25,19 @@ public class Reclamo {
     private String codigo;
 
     private LocalDateTime fechaRegistro;
+    private LocalDateTime fechaConfirmacion;
+    private String confirmadoPor;
+    @Column(length=500) private String motivoReapertura;
+    private LocalDateTime fechaSolicitudReapertura;
+    public LocalDateTime getFechaConfirmacion(){return fechaConfirmacion;}
+    public void setFechaConfirmacion(LocalDateTime v){fechaConfirmacion=v;}
+    public String getConfirmadoPor(){return confirmadoPor;}
+    public void setConfirmadoPor(String v){confirmadoPor=v;}
+    public String getMotivoReapertura(){return motivoReapertura;}
+    public void setMotivoReapertura(String v){motivoReapertura=v;}
+    public LocalDateTime getFechaSolicitudReapertura(){return fechaSolicitudReapertura;}
+    public void setFechaSolicitudReapertura(LocalDateTime v){fechaSolicitudReapertura=v;}
+
 
     @Column(length = 1000)
     private String descripcion;

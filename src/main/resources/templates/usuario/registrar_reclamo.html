@@ -15,13 +15,16 @@
             <form th:action="@{/usuario/reclamos}" th:object="${reclamoForm}" method="post" class="needs-validation" novalidate>
                 <div class="mb-3">
                     <label class="form-label required" for="codigoSuministro">Suministro</label>
-                    <select class="form-select" id="codigoSuministro" th:field="*{codigoSuministro}" required>
-                        <option value="">Seleccione su suministro</option>
+                    <select class="form-select" id="codigoSuministro" th:field="*{codigoSuministro}">
+                        <option value="">Seleccione un suministro propio o ingrese ubicación</option>
                         <option th:each="s : ${suministros}" th:value="${s.codigoSuministro}"
                                 th:text="${s.codigoSuministro + ' · ' + s.direccion + ' · ' + s.distrito}">SUM</option>
                     </select>
                     <div class="text-danger small" th:errors="*{codigoSuministro}"></div>
                 </div>
+                <p class="small-muted">Sin suministro asociado, indique ubicación y distrito. Se crea una referencia local académica; no vincula suministros institucionales.</p>
+                <label for="direccion">Ubicación sin suministro</label><input class="form-control" id="direccion" th:field="*{direccion}" maxlength="200"><p th:errors="*{direccion}"></p>
+                <label for="distrito">Distrito sin suministro</label><input class="form-control" id="distrito" th:field="*{distrito}" maxlength="80"><p th:errors="*{distrito}"></p>
                 <div class="row g-3">
                     <div class="col-md-7">
                         <label class="form-label required" for="tipoIncidencia">Tipo de incidencia</label>

@@ -59,8 +59,7 @@ public class OperadorController {
     @PostMapping("/operador/reclamos/{id}/cerrar")
     public String cerrar(@PathVariable Long id, Authentication authentication, RedirectAttributes redirect) {
         try {
-            reclamoService.cerrar(id, authentication.getName());
-            redirect.addFlashAttribute("mensaje", "Reclamo cerrado y resultado comunicado.");
+            throw new IllegalArgumentException("El cierre requiere confirmación expresa del ciudadano titular desde su cuenta.");
         } catch (IllegalArgumentException ex) {
             redirect.addFlashAttribute("error", ex.getMessage());
         }

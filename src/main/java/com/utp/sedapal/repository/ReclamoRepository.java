@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReclamoRepository extends JpaRepository<Reclamo, Long> {
 
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @org.springframework.data.jpa.repository.Query("select r from Reclamo r where r.id = :id")
+    Optional<Reclamo> bloquear(@org.springframework.data.repository.query.Param("id") Long id);
+
     Optional<Reclamo> findByCodigo(String codigo);
 
     List<Reclamo> findByUsuarioIdOrderByFechaRegistroDesc(Long usuarioId);

@@ -20,6 +20,9 @@ public class Evidencia {
     private String ruta;
     private LocalDateTime fechaCarga;
     private String descripcion;
+    private boolean visibleCiudadano;
+    public boolean isVisibleCiudadano(){return visibleCiudadano;}
+    public void setVisibleCiudadano(boolean v){visibleCiudadano=v;}
 
     @ManyToOne
     private AtencionTecnica atencion;

@@ -42,7 +42,12 @@
                 <div class="col-md-3"><span class="small-muted">Zona</span><p class="fw-bold mb-0" th:text="${reclamo.suministro.zona?.nombre}">Zona</p></div>
                 <div class="col-md-2"><span class="small-muted">Prioridad</span><p class="fw-bold mb-0" th:text="${reclamo.prioridad}">Alta</p></div>
             </div>
+            <h3>Evidencias de atención</h3><p th:if="${#lists.isEmpty(evidencias)}">No se encuentran evidencias disponibles para consulta.</p><ul><li th:each="e : ${evidencias}"><a th:href="@{/evidencias/{id}(id=${e.id})}" th:text="${e.nombre}"></a></li></ul>
             <hr><p th:text="${reclamo.descripcion}">Descripción</p>
+            <form th:if="${reclamo.estado.nombre == 'Atendido'}" th:action="@{/usuario/reclamos/{id}/cerrar(id=${reclamo.id})}" method="post">
+            <label><input type="checkbox" name="confirmar" value="true" required> Confirmo expresamente que la atención está finalizada</label><button class="btn btn-success">Confirmar cierre</button></form>
+            <form th:if="${reclamo.estado.nombre == 'Cerrado'}" th:action="@{/usuario/reclamos/{id}/reapertura(id=${reclamo.id})}" method="post">
+            <label for="motivo">Motivo de reapertura</label><textarea id="motivo" name="motivo" class="form-control" minlength="10" maxlength="500" required></textarea><button class="btn btn-sedapal">Solicitar reapertura</button></form>
             <h3 class="h6 mt-4">Progreso general</h3>
             <div class="timeline" aria-label="Estados del reclamo">
                 <div class="timeline-step" th:each="estado, iter : ${estados}" th:classappend="${iter.index <= estadoIndex} ? ' active' : ''">

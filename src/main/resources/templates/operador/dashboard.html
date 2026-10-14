@@ -19,8 +19,8 @@
                     <td class="fw-bold" th:text="${r.codigo}">REC</td><td th:text="${r.usuario.nombre + ' ' + r.usuario.apellido}">Usuario</td>
                     <td th:text="${r.tipoIncidencia}">Tipo</td><td th:text="${r.suministro.zona?.nombre}">Zona</td><td th:text="${r.prioridad}">Prioridad</td>
                     <td><span class="badge status-badge text-bg-info" th:text="${r.estado.nombre}">Estado</span></td>
-                    <td><form th:if="${r.estado.nombre == 'Atendido'}" th:action="@{/operador/reclamos/{id}/cerrar(id=${r.id})}" method="post">
-                        <button class="btn btn-sm btn-success" type="submit">Comunicar y cerrar</button></form><span th:unless="${r.estado.nombre == 'Atendido'}" class="small-muted">Sin acción</span></td>
+                    <td><a th:href="@{/operador/evidencias(reclamoId=${r.id})}">Revisar evidencias</a><form th:if="${r.estado.nombre == 'Atendido'}" th:action="@{/operador/reclamos/{id}/cerrar(id=${r.id})}" method="post">
+                        <span>Esperando confirmación del titular</span></form><span th:unless="${r.estado.nombre == 'Atendido'}" class="small-muted">Sin acción</span></td>
                 </tr>
                 </tbody>
             </table>

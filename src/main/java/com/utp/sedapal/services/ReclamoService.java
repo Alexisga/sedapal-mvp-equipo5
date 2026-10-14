@@ -35,6 +35,7 @@ public class ReclamoService {
     public static final String ASIGNADO = "Asignado";
     public static final String EN_ATENCION = "En atención";
     public static final String ATENDIDO = "Atendido";
+    public static final String REAPERTURA_SOLICITADA = "Reapertura solicitada";
     public static final String CERRADO = "Cerrado";
 
     private final ReclamoRepository reclamoRepository;
@@ -110,6 +111,18 @@ public class ReclamoService {
     }
 
     @Transactional
+    public Reclamo registrarCiudadano(Long usuarioId, com.utp.sedapal.dto.ReclamoForm f, String responsable) {
+        String codigo=f.getCodigoSuministro();
+        if(codigo==null || codigo.isBlank()) {
+            validarTexto(f.getDireccion(),5,"Ingrese una ubicación de al menos cinco caracteres.");
+            validarTexto(f.getDistrito(),2,"Ingrese el distrito.");
+            Suministro s=new Suministro();s.setUsuario(usuarioRepository.findById(usuarioId).orElseThrow());
+            s.setCodigoSuministro("LOCAL-"+java.util.UUID.randomUUID());s.setDireccion(f.getDireccion().trim());s.setDistrito(f.getDistrito().trim());
+            codigo=suministroRepository.save(s).getCodigoSuministro();
+        }
+        return registrarReclamo(usuarioId,codigo,f.getTipoIncidencia(),f.getPrioridad(),f.getDescripcion(),responsable);
+    }
+    @Transactional
     public Reclamo registrarReclamo(Long usuarioId, String codigoSuministro, String tipoIncidencia,
                                     String prioridad, String descripcion, String responsable) {
         validarTexto(descripcion, 15, "La descripción debe tener al menos 15 caracteres.");
@@ -136,6 +149,8 @@ public class ReclamoService {
         incidencia.setReclamo(reclamo);
         reclamo.getIncidencias().add(incidencia);
         reclamo = reclamoRepository.save(reclamo);
+        // Identity is allocated by the database, including concurrent registrations.
+        reclamo.setCodigo(String.format("REC-%d-%04d", Year.now().getValue(), reclamo.getId()));
         registrarHistorial(reclamo, registrado, responsable, "Reclamo registrado y código generado.");
         notificacionService.crear(usuario, reclamo, "REGISTRO", "Su reclamo " + reclamo.getCodigo() + " fue registrado.");
         auditoriaService.registrar(responsable, "REGISTRAR_RECLAMO", "Reclamo", reclamo.getId(), reclamo.getCodigo());
@@ -235,6 +250,7 @@ public class ReclamoService {
         if (orden.getEstado() == EstadoOrden.ASIGNADA) iniciarAtencionInterna(orden, responsable);
         if (orden.getEstado() != EstadoOrden.EN_ATENCION) throw new IllegalArgumentException("La orden no está en atención.");
 
+        reclamoRepository.bloquear(orden.getReclamo().getId()).orElseThrow();
         AtencionTecnica atencion = new AtencionTecnica();
         atencion.setOrden(orden);
         atencion.setFechaRegistro(LocalDateTime.now());
@@ -260,12 +276,30 @@ public class ReclamoService {
 
     @Transactional
     public Reclamo cerrar(Long reclamoId, String responsable) {
-        Reclamo reclamo = requerir(reclamoId);
+        Reclamo reclamo = titularBloqueado(reclamoId, responsable);
         exigirEstado(reclamo, ATENDIDO);
+        reclamo.setConfirmadoPor(responsable);
+        reclamo.setFechaConfirmacion(LocalDateTime.now());
         cambiarEstado(reclamo, CERRADO, responsable, "Reclamo cerrado después de comunicar el resultado.");
         notificacionService.crear(reclamo.getUsuario(), reclamo, "CIERRE", "Su reclamo " + reclamo.getCodigo() + " fue cerrado.");
         auditoriaService.registrar(responsable, "CERRAR_RECLAMO", "Reclamo", reclamoId, reclamo.getCodigo());
         return reclamo;
+    }
+
+    private Reclamo titularBloqueado(Long id, String documento) {
+        Reclamo r = reclamoRepository.bloquear(id).orElseThrow(() -> new IllegalArgumentException("Caso no disponible."));
+        if (!r.getUsuario().getDocumento().equals(documento)) throw new org.springframework.security.access.AccessDeniedException("Acceso denegado.");
+        return r;
+    }
+    @Transactional public void solicitarReapertura(Long id, String motivo, String documento) {
+        Reclamo r = titularBloqueado(id, documento);
+        exigirEstado(r, CERRADO);
+        if (motivo == null || motivo.trim().length() < 10 || motivo.trim().length() > 500)
+            throw new IllegalArgumentException("El motivo debe tener entre 10 y 500 caracteres.");
+        r.setMotivoReapertura(motivo.trim()); r.setFechaSolicitudReapertura(LocalDateTime.now());
+        cambiarEstado(r, REAPERTURA_SOLICITADA, documento, "Solicitud de reapertura registrada; pendiente de evaluación interna.");
+        notificacionService.crear(r.getUsuario(), r, "REAPERTURA", "Su reclamo " + r.getCodigo() + " tiene una solicitud de reapertura pendiente.");
+        auditoriaService.registrar(documento, "SOLICITAR_REAPERTURA", "Reclamo", id, motivo.trim());
     }
 
     private void iniciarAtencionInterna(OrdenTrabajo orden, String responsable) {
@@ -317,11 +351,7 @@ public class ReclamoService {
     }
 
     private String generarCodigoReclamo() {
-        long correlativo = reclamoRepository.count() + 1;
-        String codigo;
-        do { codigo = String.format("REC-%d-%04d", Year.now().getValue(), correlativo++); }
-        while (reclamoRepository.findByCodigo(codigo).isPresent());
-        return codigo;
+        return "PENDIENTE-" + java.util.UUID.randomUUID();
     }
 
     private String generarCodigoOrden() {

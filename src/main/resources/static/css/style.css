@@ -66,3 +66,6 @@ a, button, input, select, textarea { scroll-margin-top: 1rem; }
     body { background: #fff; }
     .panel { box-shadow: none; }
 }
+
+:focus-visible { outline: 3px solid #005a80; outline-offset: 3px; }
+.small-muted { color: #425466; }

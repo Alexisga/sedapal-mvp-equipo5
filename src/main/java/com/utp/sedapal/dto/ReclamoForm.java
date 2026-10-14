@@ -6,8 +6,12 @@ import jakarta.validation.constraints.Size;
 
 public class ReclamoForm {
     private Long usuarioId;
+    @Size(max=200) private String direccion;
+    @Size(max=80) private String distrito;
+    public String getDireccion(){return direccion;} public void setDireccion(String v){direccion=v;}
+    public String getDistrito(){return distrito;} public void setDistrito(String v){distrito=v;}
 
-    @NotBlank(message = "Seleccione un suministro.")
+
     private String codigoSuministro;
 
     @NotBlank(message = "Seleccione el tipo de incidencia.")
