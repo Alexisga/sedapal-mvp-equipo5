@@ -79,7 +79,13 @@ public class ReclamoController {
             model.addAttribute("reclamo", reclamo.get());
             model.addAttribute("estadoIndex", reclamoService.posicionEstado(reclamo.get()));
             model.addAttribute("ordenes", reclamoService.listarOrdenesPorReclamo(reclamo.get().getId()));
-            model.addAttribute("historial", reclamoService.listarHistorial(reclamo.get().getId()));
+            var historial = reclamoService.listarHistorial(reclamo.get().getId());
+            model.addAttribute("historial", historial);
+            // El historial se recupera ordenado cronológicamente en ReclamoService.
+            // Si todavía no existe una transición, usar la fecha de registro.
+            model.addAttribute("ultimaActualizacion", historial.isEmpty()
+                    ? reclamo.get().getFechaRegistro()
+                    : historial.get(historial.size() - 1).getFecha());
         } else if (codigo != null && !codigo.isBlank()) {
             model.addAttribute("error", "No se encontró un reclamo propio con el código indicado.");
         }

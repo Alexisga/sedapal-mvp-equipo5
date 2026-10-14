@@ -1,0 +1,10 @@
+PASS | Consulta con HTTP 200
+PASS | Incidencia del titular
+PASS | Resumen estado actual
+PASS | Resumen última actualización
+PASS | Fecha y hora visibles
+PASS | Dos bloques responsivos
+PASS | Historial visible
+PASS | Acceso ajeno rechazado
+Fecha UTC: 2026-10-14 16:50:22Z
+Resultado: 8/8 verificaciones

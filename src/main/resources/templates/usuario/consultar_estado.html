@@ -22,6 +22,20 @@
             <span class="badge status-badge text-bg-info align-self-center" th:text="${reclamo.estado.nombre}">Estado</span>
         </div>
         <div class="panel-body">
+            <div class="row g-3 mb-4" aria-label="Resumen de seguimiento de la incidencia">
+                <div class="col-12 col-md-6">
+                    <div class="metric h-100">
+                        <span>Estado actual</span>
+                        <strong class="h5 mb-0" th:text="${reclamo.estado.nombre}">Registrado</strong>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="metric h-100">
+                        <span>Última actualización registrada</span>
+                        <strong class="h5 mb-0" th:text="${ultimaActualizacion != null ? #temporals.format(ultimaActualizacion, 'dd/MM/yyyy HH:mm') : 'Sin fecha disponible'}">Fecha y hora</strong>
+                    </div>
+                </div>
+            </div>
             <div class="row g-3">
                 <div class="col-md-3"><span class="small-muted">Suministro</span><p class="fw-bold mb-0" th:text="${reclamo.suministro.codigoSuministro}">SUM</p></div>
                 <div class="col-md-4"><span class="small-muted">Dirección</span><p class="fw-bold mb-0" th:text="${reclamo.suministro.direccion}">Dirección</p></div>
