@@ -48,7 +48,7 @@ public class ArchivoService {
         if (archivo == null || archivo.isEmpty()) {
             return null;
         }
-        if (!TIPOS_PERMITIDOS.contains(archivo.getContentType())) {
+        if (archivo.getContentType() == null || !TIPOS_PERMITIDOS.contains(archivo.getContentType())) {
             throw new IllegalArgumentException("La evidencia debe ser una imagen JPG/PNG o un archivo PDF.");
         }
         String nombreOriginal = StringUtils.cleanPath(

@@ -15,6 +15,15 @@ import static org.assertj.core.api.Assertions.*;
 
 class ArchivoServiceTest {
  @TempDir java.nio.file.Path dir;
+ @org.junit.jupiter.api.Test void aceptaExactamenteCincoMiB() throws Exception {
+  var repo=mock(EvidenciaRepository.class);when(repo.save(any(Evidencia.class))).thenAnswer(i->i.getArgument(0));
+  var r=new Reclamo();r.setId(1L);var o=new OrdenTrabajo();o.setReclamo(r);var a=new AtencionTecnica();a.setOrden(o);
+  var out=new ByteArrayOutputStream();ImageIO.write(new BufferedImage(8,8,BufferedImage.TYPE_INT_RGB),"png",out);
+  byte[] bytes=java.util.Arrays.copyOf(out.toByteArray(),5*1024*1024);
+  var e=new ArchivoService(repo,dir.toString()).guardar(new MockMultipartFile("evidencia","qa.png","image/png",bytes),"QA límite",a);
+  assertThat(java.nio.file.Files.size(java.nio.file.Path.of(e.getRuta()))).isEqualTo(5L*1024*1024);
+ }
+
  @ParameterizedTest @ValueSource(strings={"png","jpg"})
  void aceptaImagenRealYLaGuardaPrivada(String ext) throws Exception {
   var repo=mock(EvidenciaRepository.class);

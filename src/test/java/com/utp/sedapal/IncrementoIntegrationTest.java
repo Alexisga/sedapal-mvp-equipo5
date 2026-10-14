@@ -29,6 +29,27 @@ class IncrementoIntegrationTest {
   assertThatThrownBy(()->archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf","%PDF-1.4\ncontenido falso\n%%EOF".getBytes()),"QA",new AtencionTecnica())).isInstanceOf(IllegalArgumentException.class);
  }
 
+ @ParameterizedTest @ValueSource(ints={10,500})
+ void HU06AceptaLimitesMotivo(int longitud) {
+  var r=reclamos.buscarPorCodigo("REC-2026-0003").orElseThrow();reclamos.cerrar(r.getId(),"87654321");
+  reclamos.solicitarReapertura(r.getId(),"a".repeat(longitud),"87654321");
+  assertThat(r.getMotivoReapertura()).hasSize(longitud);
+ }
+ @ParameterizedTest @ValueSource(ints={0,9,501})
+ void HU06RechazaFueraDeLimites(int longitud) {
+  var r=reclamos.buscarPorCodigo("REC-2026-0003").orElseThrow();reclamos.cerrar(r.getId(),"87654321");
+  assertThatThrownBy(()->reclamos.solicitarReapertura(r.getId(),"a".repeat(longitud),"87654321")).isInstanceOf(IllegalArgumentException.class);
+  assertThat(r.getEstado().getNombre()).isEqualTo(ReclamoService.CERRADO);
+ }
+ @Test void HU05RechazaCierreNoAtendido() {
+  var r=reclamos.buscarPorCodigo("REC-2026-0001").orElseThrow();
+  assertThatThrownBy(()->reclamos.cerrar(r.getId(),"12345678")).isInstanceOf(IllegalArgumentException.class);
+ }
+ @Test void HU01RechazaDatosObligatoriosVacios() throws Exception {
+  var u=auth.requerirPorDocumento("12345678");int n=reclamos.listarReclamosDeUsuario(u.getId()).size();
+  mvc.perform(post("/usuario/reclamos").with(user("12345678").roles("USUARIO")).with(csrf())).andExpect(status().isOk());
+  assertThat(reclamos.listarReclamosDeUsuario(u.getId())).hasSize(n);
+ }
  @Autowired MockMvc mvc; @Autowired ReclamoService reclamos; @Autowired AuthService auth;
  @Autowired RegistroService registro; @Autowired PasswordEncoder encoder; @Autowired EvidenciaService evidencias;
  @Autowired ArchivoService archivos; @Autowired EvidenciaRepository er;
