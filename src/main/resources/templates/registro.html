@@ -1,0 +1,5 @@
+<!DOCTYPE html><html lang="es" xmlns:th="http://www.thymeleaf.org"><head th:replace="~{fragments/common :: head('Crear cuenta')}"></head><body><main class="container page-shell"><h1>Crear cuenta ciudadana</h1><div th:replace="~{fragments/common :: alerts}"></div><form th:action="@{/registro}" th:object="${registroForm}" method="post" class="panel-body panel">
+<label for="nombre">Nombre</label><input id="nombre" class="form-control" th:field="*{nombre}" maxlength="80" required><p th:errors="*{nombre}"></p>
+<label for="documento">Nombre de usuario</label><input id="documento" class="form-control" th:field="*{documento}" autocomplete="username" required><p th:errors="*{documento}"></p>
+<label for="password">Contraseña de 8 a 72 caracteres</label><input id="password" name="password" class="form-control" type="password" autocomplete="new-password" minlength="8" maxlength="72" required><p th:errors="*{password}"></p>
+<button class="btn btn-sedapal mt-3">Crear cuenta</button></form><a th:href="@{/login}">Iniciar sesión</a></main></body></html>

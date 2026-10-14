@@ -36,7 +36,7 @@
                         </div>
                         <button class="btn btn-sedapal w-100" type="submit">Ingresar al sistema</button>
                     </form>
-                    <details class="mt-4 demo-credentials">
+                    <p class="mt-3"><a th:href="@{/registro}">Crear cuenta ciudadana</a> · <a th:href="@{/consulta}">Consultar por código</a></p><details class="mt-4 demo-credentials" th:if="${@environment.acceptsProfiles('demo')}">
                         <summary class="fw-bold">Usuarios de demostración</summary>
                         <div class="small-muted mt-2 two-column-list">
                             <span>Usuario: 12345678</span><span>Operador: 22222222</span>
