@@ -31,6 +31,9 @@ public class DatosInicialesService implements ApplicationRunner {
     private final boolean demoData;
     private final String demoPassword;
 
+    @Value("${app.demo-anonymous:false}")
+    private boolean anonymousDemo;
+
     public DatosInicialesService(UsuarioServicioRepository usuarioRepository,
                                  SuministroRepository suministroRepository,
                                  EstadoReclamoRepository estadoRepository,
@@ -107,8 +110,8 @@ public class DatosInicialesService implements ApplicationRunner {
 
     private UsuarioServicio crearUsuario(String nombre, String apellido, String documento, RolUsuario rol) {
         UsuarioServicio usuario = new UsuarioServicio();
-        usuario.setNombre(nombre);
-        usuario.setApellido(apellido);
+        usuario.setNombre(anonymousDemo ? "Cuenta simulada" : nombre);
+        usuario.setApellido(anonymousDemo ? rol.name() : apellido);
         usuario.setDocumento(documento);
         usuario.setPassword(passwordEncoder.encode(demoPassword));
         usuario.setRol(rol);
@@ -123,13 +126,13 @@ public class DatosInicialesService implements ApplicationRunner {
 
     private Suministro crearSuministro(String codigo, String direccion, String distrito, Zona zona, UsuarioServicio usuario) {
         Suministro suministro = new Suministro();
-        suministro.setCodigoSuministro(codigo); suministro.setDireccion(direccion);
+        suministro.setCodigoSuministro(codigo); suministro.setDireccion(anonymousDemo ? "Dirección simulada " + codigo : direccion);
         suministro.setDistrito(distrito); suministro.setZona(zona); suministro.setUsuario(usuario);
         return suministroRepository.save(suministro);
     }
 
     private Tecnico crearTecnico(String nombres, String especialidad, boolean disponible, UsuarioServicio usuario) {
-        Tecnico tecnico = new Tecnico(); tecnico.setNombres(nombres); tecnico.setEspecialidad(especialidad);
+        Tecnico tecnico = new Tecnico(); tecnico.setNombres(anonymousDemo ? "Técnico simulado" : nombres); tecnico.setEspecialidad(especialidad);
         tecnico.setDisponible(disponible); tecnico.setUsuario(usuario); return tecnicoRepository.save(tecnico);
     }
 }

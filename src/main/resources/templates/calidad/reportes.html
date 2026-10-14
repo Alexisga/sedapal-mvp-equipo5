@@ -2,6 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/common :: head('Reportes de calidad')}"></head>
 <body>
+<div th:replace="~{fragments/common :: demo}"></div>
 <a class="skip-link" href="#contenido">Saltar al contenido</a><nav th:replace="~{fragments/common :: nav}"></nav>
 <main id="contenido" class="container page-shell">
     <section class="hero-panel mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3"><div><h1 class="h2 fw-bold mb-2">Reportes e indicadores</h1><p class="mb-0">Analice reclamos por zona, estado, prioridad y periodo.</p></div><button class="btn btn-light no-print" type="button" onclick="window.print()">Imprimir reporte</button></section>

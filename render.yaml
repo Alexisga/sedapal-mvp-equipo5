@@ -1,0 +1,15 @@
+# Preparación. Crear el servicio requiere aprobación de publicación pública.
+services:
+  - type: web
+    name: sedapal-mvp-equipo5
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    autoDeployTrigger: off
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: cloud-demo
+      - key: DEMO_PASSWORD
+        generateValue: true

@@ -18,7 +18,7 @@ pruebas e inicia el perfil de demostración. También puede usar:
 
 ```powershell
 mvn clean verify
-java -jar target/sedapal-reclamos-0.0.1-SNAPSHOT.jar --spring.profiles.active=demo
+java -jar target/sedapal-reclamos-0.1.2-SNAPSHOT.jar --spring.profiles.active=demo
 ```
 
 Abra `http://localhost:8080/login`. H2 se usa solo para la demostración local y conserva
@@ -29,7 +29,7 @@ los datos en `data/sedapal-demo`.
 1. Copie `.env.example` como `.env` si desea cambiar las credenciales.
 2. Inicie MySQL: `docker compose up -d`.
 3. Compile y pruebe: `mvn clean verify`.
-4. Ejecute: `java -jar target/sedapal-reclamos-0.0.1-SNAPSHOT.jar`.
+4. Ejecute: `java -jar target/sedapal-reclamos-0.1.2-SNAPSHOT.jar`.
 5. Abra `http://localhost:8080/login`.
 
 Sin Docker, cree la base `bd_reclamos_sedapal` y configure las variables `DB_URL`,
@@ -38,7 +38,7 @@ físico JPA.
 
 ## Usuarios de demostración
 
-La contraseña común es `1234`.
+La contraseña se define mediante DEMO_PASSWORD; no existe una contraseña común predeterminada.
 
 | Rol | Documento | Función demostrable |
 |---|---:|---|

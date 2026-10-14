@@ -4,12 +4,15 @@ import com.utp.sedapal.models.UsuarioServicio;
 import com.utp.sedapal.services.AuthService;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
 public class GlobalModelAdvice {
     private final AuthService authService;
+    @Value("${app.demo-anonymous:false}")
+    private boolean anonymousDemo;
 
     public GlobalModelAdvice(AuthService authService) {
         this.authService = authService;
@@ -17,6 +20,7 @@ public class GlobalModelAdvice {
 
     @ModelAttribute
     public void agregarUsuario(Authentication authentication, Model model) {
+        model.addAttribute("demoPublica", anonymousDemo);
         if (authentication == null || !authentication.isAuthenticated()
                 || "anonymousUser".equals(authentication.getPrincipal())) {
             return;

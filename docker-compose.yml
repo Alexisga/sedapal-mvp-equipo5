@@ -6,15 +6,15 @@ services:
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-bd_reclamos_sedapal}
       MYSQL_USER: ${MYSQL_USER:-sedapal_app}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-sedapal123}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-sedapal-2026}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Define MYSQL_PASSWORD por entorno}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Define MYSQL_ROOT_PASSWORD por entorno}
       TZ: America/Lima
     ports:
-      - "${MYSQL_PORT:-3306}:3306"
+      - "127.0.0.1:${MYSQL_PORT:-3306}:3306"
     volumes:
       - sedapal_mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root-sedapal-2026}"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p\"$$MYSQL_ROOT_PASSWORD\""]
       interval: 10s
       timeout: 5s
       retries: 10

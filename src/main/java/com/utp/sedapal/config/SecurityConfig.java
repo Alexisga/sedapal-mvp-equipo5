@@ -3,6 +3,7 @@ package com.utp.sedapal.config;
 import com.utp.sedapal.models.RolUsuario;
 import java.io.IOException;
 import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
+    @Value("${app.require-https:false}")
+    private boolean requireHttps;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -47,6 +50,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, error) -> response.sendError(403)))
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+        if (requireHttps) http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
         return http.build();
     }
 

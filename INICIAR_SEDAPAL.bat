@@ -36,6 +36,6 @@ if errorlevel 1 (
 echo.
 echo Sistema listo en http://localhost:8080/login
 echo Perfil: demostracion local H2. Presione CTRL+C para detenerlo.
-java -jar "target\sedapal-reclamos-0.0.1-SNAPSHOT.jar" --spring.profiles.active=demo
+java -jar "target\sedapal-reclamos-0.1.2-SNAPSHOT.jar" --spring.profiles.active=demo
 pause
 endlocal
