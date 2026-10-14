@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"))
-                .exceptionHandling(ex -> ex.accessDeniedPage("/acceso-denegado"))
+                .exceptionHandling(ex -> ex.accessDeniedHandler((request, response, error) -> response.sendError(403)))
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
         return http.build();
