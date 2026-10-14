@@ -29,6 +29,7 @@ public class DatosInicialesService implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final ReclamoService reclamoService;
     private final boolean demoData;
+    private final String demoPassword;
 
     public DatosInicialesService(UsuarioServicioRepository usuarioRepository,
                                  SuministroRepository suministroRepository,
@@ -37,7 +38,8 @@ public class DatosInicialesService implements ApplicationRunner {
                                  ZonaRepository zonaRepository,
                                  PasswordEncoder passwordEncoder,
                                  ReclamoService reclamoService,
-                                 @Value("${app.demo-data:true}") boolean demoData) {
+                                 @Value("${app.demo-data:false}") boolean demoData,
+                                 @Value("${app.demo-password:}") String demoPassword) {
         this.usuarioRepository = usuarioRepository;
         this.suministroRepository = suministroRepository;
         this.estadoRepository = estadoRepository;
@@ -46,12 +48,14 @@ public class DatosInicialesService implements ApplicationRunner {
         this.passwordEncoder = passwordEncoder;
         this.reclamoService = reclamoService;
         this.demoData = demoData;
+        this.demoPassword = demoPassword;
     }
 
     @Override
     public void run(ApplicationArguments args) {
         configurarEstados();
         if (!demoData || usuarioRepository.count() > 0) return;
+        if (demoPassword.length() < 8) throw new IllegalStateException("Defina DEMO_PASSWORD con al menos ocho caracteres para crear datos de demostración.");
 
         Zona limaEste = crearZona("Lima Este");
         Zona limaCentro = crearZona("Lima Centro");
@@ -106,7 +110,7 @@ public class DatosInicialesService implements ApplicationRunner {
         usuario.setNombre(nombre);
         usuario.setApellido(apellido);
         usuario.setDocumento(documento);
-        usuario.setPassword(passwordEncoder.encode("1234"));
+        usuario.setPassword(passwordEncoder.encode(demoPassword));
         usuario.setRol(rol);
         usuario.setCorreo(documento + "@demo.sedapal.pe");
         usuario.setActivo(true);

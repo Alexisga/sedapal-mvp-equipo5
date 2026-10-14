@@ -13,7 +13,7 @@
 
     <groupId>com.utp</groupId>
     <artifactId>sedapal-reclamos</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
     <name>sedapal-reclamos</name>
     <description>Sistema de gestion y seguimiento de reclamos SEDAPAL</description>
 

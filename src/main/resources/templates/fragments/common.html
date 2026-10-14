@@ -31,7 +31,7 @@
         <span th:text="${mensaje}">Operación realizada.</span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar mensaje"></button>
     </div>
-    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert" tabindex="-1">
         <span th:text="${error}">Ocurrió un error.</span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar mensaje"></button>
     </div>

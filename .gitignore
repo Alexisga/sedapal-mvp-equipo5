@@ -25,3 +25,9 @@ qa_integracion.py
 qa_limites.py
 qa_modificar.py
 qa_pdf.py
+
+FUENTES_ANALISIS/
+EVIDENCIAS_CIERRE/
+ENTREGA_CIERRE_TECNICO_SEDAPAL/
+*.p12
+*.key

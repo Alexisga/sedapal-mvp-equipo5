@@ -69,3 +69,11 @@ a, button, input, select, textarea { scroll-margin-top: 1rem; }
 
 :focus-visible { outline: 3px solid #005a80; outline-offset: 3px; }
 .small-muted { color: #425466; }
+
+/* Axe verificó contraste insuficiente del azul Bootstrap sobre fondos claros. */
+:root {
+    --bs-link-color: #0056a0;
+    --bs-link-color-rgb: 0, 86, 160;
+    --bs-link-hover-color: #064273;
+    --bs-link-hover-color-rgb: 6, 66, 115;
+}
