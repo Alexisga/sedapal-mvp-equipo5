@@ -77,3 +77,7 @@ a, button, input, select, textarea { scroll-margin-top: 1rem; }
     --bs-link-hover-color: #064273;
     --bs-link-hover-color-rgb: 6, 66, 115;
 }
+
+.accordion-button { flex-wrap: wrap; gap: .5rem; }
+.accordion-button > span, .accordion-button > strong { min-width: 0; overflow-wrap: anywhere; }
+input[type="file"] { min-width: 0; max-width: 100%; }

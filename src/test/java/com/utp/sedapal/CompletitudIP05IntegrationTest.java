@@ -21,6 +21,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 /** Cohorte fijada antes de medir; incluye los casos incompletos y no modifica reglas RF. */
 @SpringBootTest @AutoConfigureMockMvc @ActiveProfiles("test")
+@org.springframework.test.annotation.DirtiesContext(classMode=org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS)
 class CompletitudIP05IntegrationTest {
     @Autowired ReclamoService reclamos;
     @Autowired AuthService auth;
