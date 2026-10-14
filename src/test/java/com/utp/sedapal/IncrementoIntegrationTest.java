@@ -50,6 +50,39 @@ class IncrementoIntegrationTest {
   mvc.perform(post("/usuario/reclamos").with(user("12345678").roles("USUARIO")).with(csrf())).andExpect(status().isOk());
   assertThat(reclamos.listarReclamosDeUsuario(u.getId())).hasSize(n);
  }
+ @ParameterizedTest @ValueSource(strings={"nombre","documento","password"})
+ void HU08RechazaCadaDatoObligatorioAusente(String campo) throws Exception {
+  var req=post("/registro").with(csrf());
+  if(!campo.equals("nombre"))req.param("nombre","QA");
+  if(!campo.equals("documento"))req.param("documento","qaFaltante");
+  if(!campo.equals("password"))req.param("password","ClaveQA123");
+  mvc.perform(req).andExpect(status().isOk());assertThat(auth.buscarPorDocumento("qaFaltante")).isEmpty();
+ }
+ @Test void HU08RechazaClaveUnicodeExcedidaEnBytes() throws Exception {
+  mvc.perform(post("/registro").with(csrf()).param("nombre","QA").param("documento","qaUnicode").param("password","é".repeat(40))).andExpect(status().isOk()).andExpect(content().string(org.hamcrest.Matchers.containsString("72 bytes")));
+  assertThat(auth.buscarPorDocumento("qaUnicode")).isEmpty();
+ }
+ @Test void HU04CadaTransicionNotificaCodigoDestinatarioYFecha() {
+  var r=reclamos.buscarPorCodigo("REC-2026-0002").orElseThrow();var o=reclamos.listarOrdenesPorReclamo(r.getId()).getFirst();
+  var tecnico=auth.requerirPorDocumento("33333333");reclamos.iniciarAtencion(o.getId(),tecnico.getId(),tecnico.getDocumento());
+  var f=new AtencionForm();f.setAccionesRealizadas("Acciones ficticias para comprobar los avisos.");f.setResultado("Resultado ficticio de una atención de QA.");
+  reclamos.registrarAtencion(o.getId(),tecnico.getId(),f,tecnico.getDocumento());reclamos.cerrar(r.getId(),"12345678");
+  reclamos.solicitarReapertura(r.getId(),"El problema ficticio continúa sin solución.","12345678");
+  var avisos=notificaciones.listar(r.getUsuario().getId()).stream().filter(n->n.getReclamo().getId().equals(r.getId())).toList();
+  assertThat(avisos).extracting(Notificacion::getTipo).containsExactlyInAnyOrder("REGISTRO","CLASIFICACION","ASIGNACION","ATENCION","RESULTADO","CIERRE","REAPERTURA");
+  assertThat(avisos).allMatch(n->n.getFecha()!=null && n.getMensaje().contains(r.getCodigo()) && n.getUsuario().getId().equals(r.getUsuario().getId()));
+ }
+ @Test void RNF06AceptaPdfCifradoReconocidoSinPublicarlo() throws Exception {
+  byte[] bytes;
+  try(var d=new org.apache.pdfbox.pdmodel.PDDocument();var out=new java.io.ByteArrayOutputStream()) {
+   d.addPage(new org.apache.pdfbox.pdmodel.PDPage());
+   var policy=new org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy("OwnerQA123","UserQA123",new org.apache.pdfbox.pdmodel.encryption.AccessPermission());
+   policy.setEncryptionKeyLength(128);d.protect(policy);d.save(out);bytes=out.toByteArray();
+  }
+  var a=new AtencionTecnica();a.setOrden(ordenes.findAll().getFirst());a.setAccionesRealizadas("QA");a.setResultado("QA");ar.save(a);
+  var e=archivos.guardar(new MockMultipartFile("evidencia","cifrado.pdf","application/pdf",bytes),"QA",a);
+  assertThat(e.isVisibleCiudadano()).isFalse();assertThat(java.nio.file.Files.readAllBytes(java.nio.file.Path.of(e.getRuta()))).isEqualTo(bytes);
+ }
  @Autowired MockMvc mvc; @Autowired ReclamoService reclamos; @Autowired AuthService auth;
  @Autowired RegistroService registro; @Autowired PasswordEncoder encoder; @Autowired EvidenciaService evidencias;
  @Autowired ArchivoService archivos; @Autowired EvidenciaRepository er;

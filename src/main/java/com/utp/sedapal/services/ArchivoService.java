@@ -34,7 +34,11 @@ public class ArchivoService {
             boolean pdf=ext.equals("pdf") && "application/pdf".equals(f.getContentType()) && b.length>8 && new String(b,0,5,java.nio.charset.StandardCharsets.US_ASCII).equals("%PDF-") && new String(b,java.nio.charset.StandardCharsets.ISO_8859_1).contains("%%EOF");
             if (pdf) {
                 try (var documento = org.apache.pdfbox.Loader.loadPDF(b)) {
-                    pdf = !documento.isEncrypted() && documento.getNumberOfPages() > 0;
+                    pdf = documento.getNumberOfPages() > 0;
+                } catch (org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException protegido) {
+                    // The parser recognized a PDF encryption dictionary. Keep the original
+                    // protected bytes; an operator must still review before publishing.
+                    pdf = true;
                 }
             }
             boolean png=ext.equals("png") && "image/png".equals(f.getContentType()) && b.length>8 && java.util.Arrays.equals(java.util.Arrays.copyOf(b,8),new byte[]{(byte)137,80,78,71,13,10,26,10});
@@ -69,6 +73,21 @@ public class ArchivoService {
         try {
             Files.createDirectories(directorio);
             archivo.transferTo(destino);
+            if (org.springframework.transaction.support.TransactionSynchronizationManager.isSynchronizationActive()) {
+                org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
+                        new org.springframework.transaction.support.TransactionSynchronization() {
+                            @Override
+                            public void afterCompletion(int estado) {
+                                if (estado != STATUS_COMMITTED) {
+                                    try { Files.deleteIfExists(destino); }
+                                    catch (IOException ex) {
+                                        org.slf4j.LoggerFactory.getLogger(ArchivoService.class)
+                                                .warn("No se pudo limpiar un adjunto de una transacción revertida", ex);
+                                    }
+                                }
+                            }
+                        });
+            }
         } catch (IOException ex) {
             throw new IllegalStateException("No se pudo guardar la evidencia técnica.", ex);
         }
