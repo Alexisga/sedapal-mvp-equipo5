@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Bandeja técnica')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a><nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell">
+    <div th:replace="~{fragments/common :: alerts}"></div>
+    <section class="hero-panel mb-4"><h1 class="h2 fw-bold mb-2">Bandeja técnica</h1><p class="mb-0">Inicie la atención, registre acciones, resultado y evidencia del trabajo realizado.</p></section>
+    <div class="accordion" id="ordenesAccordion">
+        <article class="accordion-item" th:each="orden : ${ordenes}">
+            <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#orden-' + orden.id}">
+                <strong class="me-2" th:text="${orden.codigo}">OT</strong><span th:text="${orden.reclamo.codigo + ' · ' + orden.reclamo.tipoIncidencia}">Reclamo</span>
+                <span class="badge text-bg-info ms-auto me-3" th:text="${orden.estado.etiqueta}">Estado</span></button></h2>
+            <div class="accordion-collapse collapse" th:id="${'orden-' + orden.id}" data-bs-parent="#ordenesAccordion"><div class="accordion-body">
+                <div class="row g-3 mb-3"><div class="col-md-3"><span class="small-muted">Suministro</span><p class="fw-bold mb-0" th:text="${orden.reclamo.suministro.codigoSuministro}">SUM</p></div>
+                    <div class="col-md-3"><span class="small-muted">Distrito</span><p class="fw-bold mb-0" th:text="${orden.reclamo.suministro.distrito}">Distrito</p></div>
+                    <div class="col-md-3"><span class="small-muted">Prioridad</span><p class="fw-bold mb-0" th:text="${orden.reclamo.prioridad}">Alta</p></div>
+                    <div class="col-md-3"><span class="small-muted">Estado del reclamo</span><p class="fw-bold mb-0" th:text="${orden.reclamo.estado.nombre}">Asignado</p></div></div>
+                <p th:text="${orden.reclamo.descripcion}">Descripción</p>
+                <form th:if="${orden.estado.name() == 'ASIGNADA'}" th:action="@{/tecnico/ordenes/{id}/iniciar(id=${orden.id})}" method="post" class="mb-3">
+                    <button class="btn btn-outline-sedapal" type="submit">Iniciar atención en campo</button>
+                </form>
+                <form th:if="${orden.estado.name() == 'ASIGNADA' || orden.estado.name() == 'EN_ATENCION'}"
+                      th:action="@{/tecnico/ordenes/{id}/resolver(id=${orden.id})}" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="mb-3"><label class="form-label required" th:for="${'acciones-' + orden.id}">Acciones realizadas</label>
+                        <textarea class="form-control" th:id="${'acciones-' + orden.id}" name="accionesRealizadas" rows="3" minlength="10" maxlength="1500" required></textarea></div>
+                    <div class="mb-3"><label class="form-label required" th:for="${'resultado-' + orden.id}">Resultado de la atención</label>
+                        <textarea class="form-control" th:id="${'resultado-' + orden.id}" name="resultado" rows="3" minlength="10" maxlength="1500" required></textarea></div>
+                    <div class="mb-3"><label class="form-label" th:for="${'observaciones-' + orden.id}">Observaciones</label>
+                        <textarea class="form-control" th:id="${'observaciones-' + orden.id}" name="observaciones" rows="2" maxlength="1000"></textarea></div>
+                    <div class="row g-3"><div class="col-md-7"><label class="form-label" th:for="${'evidencia-' + orden.id}">Evidencia técnica</label>
+                        <input class="form-control" type="file" th:id="${'evidencia-' + orden.id}" name="evidencia" accept="image/jpeg,image/png,application/pdf" aria-describedby="ayuda-evidencia">
+                        <div id="ayuda-evidencia" class="form-text">JPG, PNG o PDF; máximo 5 MB.</div></div>
+                        <div class="col-md-5"><label class="form-label" th:for="${'detalle-' + orden.id}">Descripción de evidencia</label><input class="form-control" th:id="${'detalle-' + orden.id}" name="descripcionEvidencia" maxlength="250"></div></div>
+                    <button class="btn btn-sedapal mt-3" type="submit">Registrar atención y actualizar estado</button>
+                </form>
+                <div th:if="${orden.estado.name() == 'ATENDIDA'}" class="alert alert-success mb-0"><strong>Atención registrada:</strong> <span th:text="${orden.resultado}">Resultado</span></div>
+            </div></div>
+        </article>
+        <div th:if="${#lists.isEmpty(ordenes)}" class="panel empty-state">No hay órdenes asignadas al técnico.</div>
+    </div>
+</main><th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body></html>

@@ -1,0 +1,23 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: sedapal-reclamos-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-bd_reclamos_sedapal}
+      MYSQL_USER: ${MYSQL_USER:-sedapal_app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-sedapal123}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-sedapal-2026}
+      TZ: America/Lima
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - sedapal_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root-sedapal-2026}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sedapal_mysql_data:

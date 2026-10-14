@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Reportes de calidad')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a><nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell">
+    <section class="hero-panel mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3"><div><h1 class="h2 fw-bold mb-2">Reportes e indicadores</h1><p class="mb-0">Analice reclamos por zona, estado, prioridad y periodo.</p></div><button class="btn btn-light no-print" type="button" onclick="window.print()">Imprimir reporte</button></section>
+    <form class="filter-bar row g-3 mb-4 no-print" th:action="@{/calidad/reportes}" method="get">
+        <div class="col-md-3"><label class="form-label" for="zona">Zona</label><select class="form-select" id="zona" name="zona"><option value="">Todas</option><option th:each="z : ${zonas}" th:value="${z.nombre}" th:text="${z.nombre}" th:selected="${z.nombre == zonaSeleccionada}">Zona</option></select></div>
+        <div class="col-md-3"><label class="form-label" for="estado">Estado</label><select class="form-select" id="estado" name="estado"><option value="">Todos</option><option th:each="e : ${estados}" th:value="${e.nombre}" th:text="${e.nombre}" th:selected="${e.nombre == estadoSeleccionado}">Estado</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="prioridad">Prioridad</label><select class="form-select" id="prioridad" name="prioridad"><option value="">Todas</option><option th:selected="${prioridadSeleccionada == 'Alta'}">Alta</option><option th:selected="${prioridadSeleccionada == 'Media'}">Media</option><option th:selected="${prioridadSeleccionada == 'Baja'}">Baja</option></select></div>
+        <div class="col-md-2"><label class="form-label" for="desde">Desde</label><input class="form-control" id="desde" type="date" name="desde" th:value="${desde}"></div>
+        <div class="col-md-2"><label class="form-label" for="hasta">Hasta</label><input class="form-control" id="hasta" type="date" name="hasta" th:value="${hasta}"></div>
+        <div class="col-12 d-flex gap-2"><button class="btn btn-sedapal" type="submit">Aplicar filtros</button><a class="btn btn-outline-secondary" th:href="@{/calidad/reportes}">Limpiar</a><a class="btn btn-outline-success" th:href="@{/calidad/reportes.csv(zona=${zonaSeleccionada},estado=${estadoSeleccionado},prioridad=${prioridadSeleccionada})}">Descargar CSV</a></div>
+    </form>
+    <div class="row g-3 mb-4"><div class="col-md"><div class="metric"><strong th:text="${resumen.total}">0</strong><span>Total</span></div></div><div class="col-md"><div class="metric"><strong th:text="${resumen.enProceso}">0</strong><span>En proceso</span></div></div><div class="col-md"><div class="metric"><strong th:text="${resumen.atendidos}">0</strong><span>Atendidos</span></div></div><div class="col-md"><div class="metric"><strong th:text="${resumen.cerrados}">0</strong><span>Cerrados</span></div></div><div class="col-md"><div class="metric"><strong th:text="${#numbers.formatDecimal(resumen.promedioHorasAtencion,1,1)}">0</strong><span>Horas promedio</span></div></div></div>
+    <section class="panel"><div class="panel-header"><h2 class="h5 mb-0">Detalle del reporte</h2></div><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th>Código</th><th>Fecha</th><th>Zona</th><th>Tipo</th><th>Prioridad</th><th>Estado</th></tr></thead><tbody>
+        <tr th:each="r : ${reclamos}"><td class="fw-bold" th:text="${r.codigo}">REC</td><td th:text="${#temporals.format(r.fechaRegistro,'dd/MM/yyyy')}">Fecha</td><td th:text="${r.suministro.zona?.nombre}">Zona</td><td th:text="${r.tipoIncidencia}">Tipo</td><td th:text="${r.prioridad}">Prioridad</td><td th:text="${r.estado.nombre}">Estado</td></tr>
+        <tr th:if="${#lists.isEmpty(reclamos)}"><td colspan="6" class="empty-state">No existen datos para los filtros seleccionados.</td></tr></tbody></table></div></section>
+</main><th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body></html>

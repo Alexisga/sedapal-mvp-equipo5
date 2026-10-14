@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Panel del operador')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a><nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell">
+    <div th:replace="~{fragments/common :: alerts}"></div>
+    <section class="hero-panel mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div><h1 class="h2 fw-bold mb-2">Panel del operador</h1><p class="mb-0">Registre reclamos recibidos, consulte el flujo y cierre atenciones comunicadas.</p></div>
+        <a class="btn btn-light" th:href="@{/operador/reclamos/nuevo}">Registrar para un usuario</a>
+    </section>
+    <section class="panel">
+        <div class="panel-header"><h2 class="h5 mb-0">Todos los reclamos</h2></div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0"><caption class="visually-hidden">Reclamos registrados</caption>
+                <thead><tr><th>Código</th><th>Usuario</th><th>Incidencia</th><th>Zona</th><th>Prioridad</th><th>Estado</th><th>Acción</th></tr></thead>
+                <tbody>
+                <tr th:each="r : ${reclamos}">
+                    <td class="fw-bold" th:text="${r.codigo}">REC</td><td th:text="${r.usuario.nombre + ' ' + r.usuario.apellido}">Usuario</td>
+                    <td th:text="${r.tipoIncidencia}">Tipo</td><td th:text="${r.suministro.zona?.nombre}">Zona</td><td th:text="${r.prioridad}">Prioridad</td>
+                    <td><span class="badge status-badge text-bg-info" th:text="${r.estado.nombre}">Estado</span></td>
+                    <td><form th:if="${r.estado.nombre == 'Atendido'}" th:action="@{/operador/reclamos/{id}/cerrar(id=${r.id})}" method="post">
+                        <button class="btn btn-sm btn-success" type="submit">Comunicar y cerrar</button></form><span th:unless="${r.estado.nombre == 'Atendido'}" class="small-muted">Sin acción</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main><th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body></html>

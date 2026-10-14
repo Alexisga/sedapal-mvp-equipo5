@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Consultar reclamo')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell">
+    <section class="panel mb-4">
+        <div class="panel-header"><h1 class="h4 mb-1">Consultar estado del reclamo</h1><p class="small-muted mb-0">Solo puede consultar reclamos asociados a su cuenta.</p></div>
+        <div class="panel-body">
+            <div th:replace="~{fragments/common :: alerts}"></div>
+            <form th:action="@{/usuario/consultar}" method="get" class="row g-2">
+                <div class="col-md-9"><label class="visually-hidden" for="codigo">Código del reclamo</label><input class="form-control form-control-lg" id="codigo" name="codigo" th:value="${codigoBuscado}" placeholder="REC-2026-0001" required></div>
+                <div class="col-md-3 d-grid"><button class="btn btn-sedapal btn-lg" type="submit">Buscar</button></div>
+            </form>
+        </div>
+    </section>
+
+    <section class="panel" th:if="${reclamo != null}" aria-labelledby="codigo-reclamo">
+        <div class="panel-header d-flex flex-wrap justify-content-between gap-2">
+            <div><h2 id="codigo-reclamo" class="h5 mb-1" th:text="${reclamo.codigo}">REC</h2><p class="small-muted mb-0" th:text="${reclamo.tipoIncidencia + ' · ' + reclamo.suministro.distrito}">Incidencia</p></div>
+            <span class="badge status-badge text-bg-info align-self-center" th:text="${reclamo.estado.nombre}">Estado</span>
+        </div>
+        <div class="panel-body">
+            <div class="row g-3">
+                <div class="col-md-3"><span class="small-muted">Suministro</span><p class="fw-bold mb-0" th:text="${reclamo.suministro.codigoSuministro}">SUM</p></div>
+                <div class="col-md-4"><span class="small-muted">Dirección</span><p class="fw-bold mb-0" th:text="${reclamo.suministro.direccion}">Dirección</p></div>
+                <div class="col-md-3"><span class="small-muted">Zona</span><p class="fw-bold mb-0" th:text="${reclamo.suministro.zona?.nombre}">Zona</p></div>
+                <div class="col-md-2"><span class="small-muted">Prioridad</span><p class="fw-bold mb-0" th:text="${reclamo.prioridad}">Alta</p></div>
+            </div>
+            <hr><p th:text="${reclamo.descripcion}">Descripción</p>
+            <h3 class="h6 mt-4">Progreso general</h3>
+            <div class="timeline" aria-label="Estados del reclamo">
+                <div class="timeline-step" th:each="estado, iter : ${estados}" th:classappend="${iter.index <= estadoIndex} ? ' active' : ''">
+                    <strong th:text="${estado.nombre}">Estado</strong><span class="visually-hidden" th:if="${iter.index <= estadoIndex}"> completado</span>
+                </div>
+            </div>
+            <div class="row g-4 mt-3">
+                <section class="col-lg-7" aria-labelledby="historial-titulo">
+                    <h3 id="historial-titulo" class="h6">Historial verificable</h3>
+                    <ol class="history-list mt-3">
+                        <li th:each="h : ${historial}"><strong th:text="${h.estado.nombre}">Estado</strong>
+                            <div class="small-muted" th:text="${#temporals.format(h.fecha, 'dd/MM/yyyy HH:mm') + ' · ' + h.responsable}">Fecha</div>
+                            <p class="mb-0" th:text="${h.observacion}">Observación</p></li>
+                    </ol>
+                </section>
+                <section class="col-lg-5" aria-labelledby="ordenes-titulo">
+                    <h3 id="ordenes-titulo" class="h6">Órdenes de trabajo</h3>
+                    <div class="list-group mt-3">
+                        <div class="list-group-item" th:each="orden : ${ordenes}">
+                            <div class="d-flex justify-content-between"><strong th:text="${orden.codigo}">OT</strong><span class="badge text-bg-light" th:text="${orden.estado.etiqueta}">Estado</span></div>
+                            <p class="mb-1 mt-2" th:if="${orden.asignacion != null}" th:text="${'Técnico: ' + orden.asignacion.tecnico.nombres}">Técnico</p>
+                            <p class="mb-0" th:text="${orden.resultado}">Resultado</p>
+                        </div>
+                        <div th:if="${#lists.isEmpty(ordenes)}" class="empty-state">Aún no se generó una orden.</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</main>
+<th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body>
+</html>

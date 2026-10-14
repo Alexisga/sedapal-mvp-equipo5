@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Registro por operador')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al formulario</a><nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell" style="max-width: 920px;">
+    <div th:replace="~{fragments/common :: alerts}"></div>
+    <section class="panel"><div class="panel-header"><h1 class="h4 mb-1">Registrar reclamo recibido</h1><p class="small-muted mb-0">Seleccione al usuario y uno de sus suministros.</p></div>
+        <div class="panel-body"><form th:action="@{/operador/reclamos}" th:object="${reclamoForm}" method="post" class="needs-validation" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label required" for="usuarioId">Usuario</label>
+                    <select class="form-select" id="usuarioId" th:field="*{usuarioId}" data-user-select required><option value="">Seleccione</option>
+                        <option th:each="u : ${usuarios}" th:value="${u.id}" th:text="${u.documento + ' · ' + u.nombre + ' ' + u.apellido}">Usuario</option></select>
+                    <div class="text-danger small" th:errors="*{usuarioId}"></div></div>
+                <div class="col-md-6"><label class="form-label required" for="codigoSuministro">Suministro</label>
+                    <select class="form-select" id="codigoSuministro" th:field="*{codigoSuministro}" data-supply-select required disabled><option value="">Seleccione</option>
+                        <option th:each="s : ${suministros}" th:value="${s.codigoSuministro}" th:attr="data-usuario-id=${s.usuario.id}"
+                                th:text="${s.codigoSuministro + ' · ' + s.distrito}">SUM</option></select>
+                    <div class="text-danger small" th:errors="*{codigoSuministro}"></div></div>
+                <div class="col-md-7"><label class="form-label required" for="tipo">Tipo de incidencia</label>
+                    <select class="form-select" id="tipo" th:field="*{tipoIncidencia}" required><option value="">Seleccione</option><option value="Fuga de agua">Fuga de agua</option><option value="Baja presión">Baja presión</option><option value="Atoro">Atoro</option><option value="Corte de servicio">Corte de servicio</option><option value="Medidor o conexión">Medidor o conexión</option><option value="Otro reclamo técnico">Otro reclamo técnico</option></select></div>
+                <div class="col-md-5"><label class="form-label required" for="prioridad">Prioridad percibida</label>
+                    <select class="form-select" id="prioridad" th:field="*{prioridad}" required><option value="">Seleccione</option><option value="Alta">Alta</option><option value="Media">Media</option><option value="Baja">Baja</option></select></div>
+                <div class="col-12"><label class="form-label required" for="descripcion">Descripción comunicada</label>
+                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="5" minlength="15" maxlength="1000" required></textarea>
+                    <div class="text-danger small" th:errors="*{descripcion}"></div></div>
+            </div>
+            <div class="d-flex justify-content-between mt-4"><a class="btn btn-outline-secondary" th:href="@{/operador}">Cancelar</a><button class="btn btn-sedapal" type="submit">Registrar reclamo</button></div>
+        </form></div>
+    </section>
+</main><th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body></html>

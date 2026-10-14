@@ -1,0 +1,5 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Acceso denegado')}"></head>
+<body><main class="container d-flex min-vh-100 align-items-center justify-content-center"><section class="panel text-center p-5"><div class="display-1 fw-bold text-primary">403</div><h1 class="h3">Acceso denegado</h1><p>Su rol no tiene permiso para ingresar a esta función.</p><a class="btn btn-sedapal" th:href="@{/panel}">Volver a mi panel</a></section></main></body>
+</html>

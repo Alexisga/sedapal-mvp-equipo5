@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Registrar reclamo')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al formulario</a>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell" style="max-width: 900px;">
+    <div th:replace="~{fragments/common :: alerts}"></div>
+    <section class="panel">
+        <div class="panel-header">
+            <h1 class="h4 mb-1">Registrar reclamo técnico</h1>
+            <p class="small-muted mb-0">Los campos marcados con asterisco son obligatorios.</p>
+        </div>
+        <div class="panel-body">
+            <form th:action="@{/usuario/reclamos}" th:object="${reclamoForm}" method="post" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label class="form-label required" for="codigoSuministro">Suministro</label>
+                    <select class="form-select" id="codigoSuministro" th:field="*{codigoSuministro}" required>
+                        <option value="">Seleccione su suministro</option>
+                        <option th:each="s : ${suministros}" th:value="${s.codigoSuministro}"
+                                th:text="${s.codigoSuministro + ' · ' + s.direccion + ' · ' + s.distrito}">SUM</option>
+                    </select>
+                    <div class="text-danger small" th:errors="*{codigoSuministro}"></div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-7">
+                        <label class="form-label required" for="tipoIncidencia">Tipo de incidencia</label>
+                        <select class="form-select" id="tipoIncidencia" th:field="*{tipoIncidencia}" required>
+                            <option value="">Seleccione</option><option value="Fuga de agua">Fuga de agua</option><option value="Baja presión">Baja presión</option>
+                            <option value="Atoro">Atoro</option><option value="Corte de servicio">Corte de servicio</option><option value="Medidor o conexión">Medidor o conexión</option><option value="Otro reclamo técnico">Otro reclamo técnico</option>
+                        </select>
+                        <div class="text-danger small" th:errors="*{tipoIncidencia}"></div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label required" for="prioridad">Prioridad percibida</label>
+                        <select class="form-select" id="prioridad" th:field="*{prioridad}" required>
+                            <option value="">Seleccione</option><option value="Alta">Alta</option><option value="Media">Media</option><option value="Baja">Baja</option>
+                        </select>
+                        <div class="text-danger small" th:errors="*{prioridad}"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="form-label required" for="descripcion">Descripción</label>
+                    <textarea class="form-control" id="descripcion" th:field="*{descripcion}" rows="5" minlength="15" maxlength="1000"
+                              aria-describedby="ayudaDescripcion" required></textarea>
+                    <div id="ayudaDescripcion" class="form-text">Indique ubicación, momento de inicio y señales observadas. No incluya contraseñas.</div>
+                    <div class="text-danger small" th:errors="*{descripcion}"></div>
+                </div>
+                <div class="d-flex justify-content-between mt-4">
+                    <a class="btn btn-outline-secondary" th:href="@{/usuario}">Cancelar</a>
+                    <button class="btn btn-sedapal" type="submit">Registrar y generar código</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+<th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body>
+</html>

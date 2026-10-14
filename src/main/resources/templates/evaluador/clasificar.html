@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Clasificación de incidencias')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a><nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell">
+    <div th:replace="~{fragments/common :: alerts}"></div>
+    <section class="hero-panel mb-4"><h1 class="h2 fw-bold mb-2">Evaluación y clasificación</h1><p class="mb-0">Confirme el tipo, establezca la prioridad y determine si se requiere atención en campo.</p></section>
+    <div class="accordion" id="reclamosEvaluacion">
+        <article class="accordion-item" th:each="r : ${reclamos}">
+            <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:data-bs-target="${'#reclamo-' + r.id}">
+                <strong class="me-2" th:text="${r.codigo}">REC</strong><span th:text="${r.tipoIncidencia + ' · ' + r.suministro.distrito}">Tipo</span></button></h2>
+            <div class="accordion-collapse collapse" th:id="${'reclamo-' + r.id}" data-bs-parent="#reclamosEvaluacion"><div class="accordion-body">
+                <div class="row g-3 mb-3"><div class="col-md-4"><strong>Usuario</strong><p th:text="${r.usuario.nombre + ' ' + r.usuario.apellido}"></p></div>
+                    <div class="col-md-4"><strong>Suministro</strong><p th:text="${r.suministro.codigoSuministro}"></p></div><div class="col-md-4"><strong>Prioridad inicial</strong><p th:text="${r.prioridad}"></p></div></div>
+                <p th:text="${r.descripcion}">Descripción</p>
+                <form th:action="@{/evaluador/reclamos/{id}/clasificar(id=${r.id})}" method="post" class="needs-validation" novalidate>
+                    <div class="row g-3"><div class="col-md-5"><label class="form-label required" th:for="${'tipo-' + r.id}">Clasificación final</label>
+                        <select class="form-select" th:id="${'tipo-' + r.id}" name="tipoIncidencia" required><option th:text="${r.tipoIncidencia}" th:value="${r.tipoIncidencia}"></option><option>Fuga de agua</option><option>Baja presión</option><option>Atoro</option><option>Corte no programado</option><option>Corte programado</option><option>Medidor o conexión</option></select></div>
+                        <div class="col-md-3"><label class="form-label required" th:for="${'prioridad-' + r.id}">Prioridad</label><select class="form-select" th:id="${'prioridad-' + r.id}" name="prioridad" required><option th:selected="${r.prioridad == 'Alta'}">Alta</option><option th:selected="${r.prioridad == 'Media'}">Media</option><option th:selected="${r.prioridad == 'Baja'}">Baja</option></select></div>
+                        <div class="col-md-4 d-flex align-items-end"><div class="form-check mb-2"><input class="form-check-input" type="checkbox" name="requiereAtencionCampo" value="true" th:id="${'campo-' + r.id}" checked><label class="form-check-label" th:for="${'campo-' + r.id}">Requiere atención en campo</label></div></div>
+                        <div class="col-12"><label class="form-label required" th:for="${'observacion-' + r.id}">Evaluación realizada</label><textarea class="form-control" th:id="${'observacion-' + r.id}" name="observacion" minlength="10" maxlength="1000" required></textarea></div></div>
+                    <button class="btn btn-sedapal mt-3" type="submit">Guardar clasificación</button>
+                </form>
+            </div></div>
+        </article>
+        <div th:if="${#lists.isEmpty(reclamos)}" class="panel empty-state">No hay reclamos pendientes de clasificación.</div>
+    </div>
+</main><th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body></html>

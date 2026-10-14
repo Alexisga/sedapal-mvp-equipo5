@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Iniciar sesión')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al formulario</a>
+<main id="contenido" class="container-fluid login-page">
+    <div class="row min-vh-100">
+        <section class="col-lg-6 login-side d-flex align-items-center" aria-labelledby="titulo-sistema">
+            <div class="p-4 p-lg-5 login-copy">
+                <div class="brand-mark brand-mark-large mb-4" aria-hidden="true">S</div>
+                <h1 id="titulo-sistema" class="display-5 fw-bold">SEDAPAL Reclamos</h1>
+                <p class="lead mt-3">Gestión y seguimiento de reclamos técnicos de agua potable en Lima y Callao.</p>
+                <p class="mb-0">Proyecto Final · UTP · Java 21, Spring Boot y MySQL</p>
+            </div>
+        </section>
+        <section class="col-lg-6 d-flex align-items-center justify-content-center p-4" aria-labelledby="titulo-login">
+            <div class="panel w-100" style="max-width: 480px;">
+                <div class="panel-header">
+                    <h2 id="titulo-login" class="h4 mb-1">Iniciar sesión</h2>
+                    <p class="small-muted mb-0">Ingrese el documento y la contraseña del rol que desea demostrar.</p>
+                </div>
+                <div class="panel-body">
+                    <div th:replace="~{fragments/common :: alerts}"></div>
+                    <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label class="form-label" for="documento">Documento</label>
+                            <input class="form-control" id="documento" name="documento" inputmode="numeric"
+                                   autocomplete="username" placeholder="Ej. 12345678" required autofocus>
+                            <div class="invalid-feedback">Ingrese el documento.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="password">Contraseña</label>
+                            <input class="form-control" id="password" type="password" name="password"
+                                   autocomplete="current-password" placeholder="••••" required>
+                            <div class="invalid-feedback">Ingrese la contraseña.</div>
+                        </div>
+                        <button class="btn btn-sedapal w-100" type="submit">Ingresar al sistema</button>
+                    </form>
+                    <details class="mt-4 demo-credentials">
+                        <summary class="fw-bold">Usuarios de demostración</summary>
+                        <div class="small-muted mt-2 two-column-list">
+                            <span>Usuario: 12345678</span><span>Operador: 22222222</span>
+                            <span>Evaluador: 44444444</span><span>Supervisor: 55555555</span>
+                            <span>Técnico: 33333333</span><span>Calidad: 66666666</span>
+                            <span>Administrador: 99999999</span><span>Clave común: 1234</span>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body>
+</html>

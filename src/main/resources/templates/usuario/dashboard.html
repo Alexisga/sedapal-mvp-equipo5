@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Portal del usuario')}"></head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<nav th:replace="~{fragments/common :: nav}"></nav>
+<main id="contenido" class="container page-shell">
+    <div th:replace="~{fragments/common :: alerts}"></div>
+    <section class="hero-panel mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div><h1 class="h2 fw-bold mb-2">Portal del usuario</h1><p class="mb-0">Registre incidencias y consulte el seguimiento completo de sus reclamos.</p></div>
+            <div class="d-flex gap-2">
+                <a class="btn btn-light" th:href="@{/usuario/reclamos/nuevo}">Nuevo reclamo</a>
+                <a class="btn btn-outline-light" th:href="@{/usuario/consultar}">Consultar código</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4"><div class="metric"><strong th:text="${#lists.size(reclamos)}">0</strong><span>Reclamos registrados</span></div></div>
+        <div class="col-md-4"><div class="metric"><strong th:text="${notificacionesNoLeidas}">0</strong><span>Notificaciones nuevas</span></div></div>
+        <div class="col-md-4"><div class="metric"><strong>6</strong><span>Estados trazables</span></div></div>
+    </div>
+
+    <div class="row g-4">
+        <section class="col-lg-8" aria-labelledby="titulo-reclamos">
+            <div class="panel">
+                <div class="panel-header"><h2 id="titulo-reclamos" class="h5 mb-0">Mis reclamos</h2></div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <caption class="visually-hidden">Listado de reclamos del usuario</caption>
+                        <thead><tr><th>Código</th><th>Fecha</th><th>Suministro</th><th>Prioridad</th><th>Estado</th><th>Acción</th></tr></thead>
+                        <tbody>
+                        <tr th:each="reclamo : ${reclamos}">
+                            <td class="fw-bold" th:text="${reclamo.codigo}">REC-0001</td>
+                            <td th:text="${#temporals.format(reclamo.fechaRegistro, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                            <td th:text="${reclamo.suministro.codigoSuministro}">SUM</td>
+                            <td th:text="${reclamo.prioridad}">Alta</td>
+                            <td><span class="badge status-badge text-bg-info" th:text="${reclamo.estado.nombre}">Registrado</span></td>
+                            <td><a class="btn btn-sm btn-outline-sedapal" th:href="@{/usuario/consultar(codigo=${reclamo.codigo})}">Ver seguimiento</a></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(reclamos)}"><td colspan="6" class="empty-state">Todavía no tiene reclamos registrados.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        <aside class="col-lg-4" aria-labelledby="titulo-notificaciones">
+            <div class="panel">
+                <div class="panel-header"><h2 id="titulo-notificaciones" class="h5 mb-0">Notificaciones</h2></div>
+                <div class="list-group list-group-flush">
+                    <div th:each="n : ${notificaciones}" class="list-group-item" th:classappend="${!n.leida} ? ' notification-unread' : ''">
+                        <p class="mb-1" th:text="${n.mensaje}">Mensaje</p>
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <small class="small-muted" th:text="${#temporals.format(n.fecha, 'dd/MM HH:mm')}">Fecha</small>
+                            <form th:if="${!n.leida}" th:action="@{/usuario/notificaciones/leer}" method="post">
+                                <input type="hidden" name="id" th:value="${n.id}"><button class="btn btn-sm btn-link" type="submit">Marcar leída</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div th:if="${#lists.isEmpty(notificaciones)}" class="empty-state">No hay notificaciones.</div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+<th:block th:replace="~{fragments/common :: scripts}"></th:block>
+</body>
+</html>
