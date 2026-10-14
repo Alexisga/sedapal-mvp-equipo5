@@ -12,3 +12,16 @@ uploads/
 __pycache__/
 *.pyc
 .DS_Store
+
+REVISION_FINAL/
+contacto-capturas.png
+contacto-final.png
+qa_actualizar_informe.py
+qa_cierre_informe.py
+qa_cobertura.py
+qa_evidencias.py
+qa_finalizar_codigo.py
+qa_integracion.py
+qa_limites.py
+qa_modificar.py
+qa_pdf.py
