@@ -30,7 +30,9 @@ def start(engine):
  (OUT/f'entorno-{engine}.json').write_text(json.dumps(dict(fecha=now(),pid=proc.pid,args=args,jar_sha256=hashlib.sha256(Path(A.jar).read_bytes()).hexdigest(),commit=VERSION,datos='SIMULADOS',credenciales='Suministradas por entorno; no registradas'),indent=2),encoding='utf-8')
  return proc,log,f'http://127.0.0.1:{port}'
 def login(p,b,doc='12345678',password=None):
- p.goto(b+'/login');p.locator('#documento').fill(doc);p.locator('#password').fill(password or PASSWORD);p.locator('button[type=submit]').click();p.wait_for_load_state()
+ p.goto(b+'/login');p.locator('#documento').fill(doc);p.locator('#password').fill(password or PASSWORD);p.locator('button[type=submit]').click()
+ expected={'22222222':'/operador','33333333':'/tecnico','44444444':'/evaluador','55555555':'/supervisor','66666666':'/calidad/reportes','99999999':'/admin'}.get(doc,'/usuario')
+ p.wait_for_url(b+expected,timeout=5000)
 def ready(p,b):
  for _ in range(100):
   try:
@@ -73,11 +75,11 @@ def execute(browser,engine,b):
  tc=browser.new_context();t=tc.new_page();login(t,b,'33333333');t.locator('.accordion-button').first.click();scan(t,'atencion-tecnica',engine)
  form=t.locator('form').filter(has=t.locator('input[type=file]')).first
  fixture=OUT/f'evidencia-simulada-{engine}.pdf';cv=canvas.Canvas(str(fixture));cv.drawString(70,750,'EVIDENCIA SIMULADA PARA PRUEBA QA - NO CASO REAL');cv.save()
- form.locator('[name=accionesRealizadas]').fill('Atención ficticia para verificar evidencia y accesibilidad.');form.locator('[name=resultado]').fill('Resultado simulado de la verificación automatizada.');form.locator('input[type=file]').set_input_files(str(fixture))
+ form.locator('[name=accionesRealizadas]').fill('Atención ficticia para verificar evidencia y accesibilidad.');form.locator('[name=resultado]').fill('Resultado simulado de la verificación automatizada.');form.locator('input[type=file]').set_input_files(str(fixture));mime=form.locator('input[type=file]').evaluate('(e)=>e.files[0].type')
  with t.expect_response(lambda r:'/resolver' in r.url and r.request.method=='POST') as uploaded:
   form.locator('button[type=submit]').click()
  t.wait_for_load_state();t.screenshot(path=str(OUT/f'{engine}-resultado-carga.png'),full_page=True)
- (OUT/f'{engine}-resultado-carga.json').write_text(json.dumps({'http':uploaded.value.status,'texto':t.inner_text('body'),'tipo_declarado_por_navegador':form.locator('input[type=file]').count() if form.count() else 'formulario finalizado'},ensure_ascii=False,indent=2),encoding='utf-8')
+ (OUT/f'{engine}-resultado-carga.json').write_text(json.dumps({'http':uploaded.value.status,'texto':t.inner_text('body'),'tipo_declarado_por_navegador':mime},ensure_ascii=False,indent=2),encoding='utf-8')
  oc=browser.new_context();op=oc.new_page();login(op,b,'22222222');op.goto(b+'/operador/evidencias?reclamoId=2');scan(op,'revision-evidencia',engine)
  href=op.locator('a[href^="/evidencias/"]').first.get_attribute('href')
  p.goto(b+'/usuario/consultar?codigo=REC-2026-0002');check('ADJUNTO-OCULTO','RNF-05;RF-05','Titular recibe 403 antes de revisión',lambda:status(p.context.request.get(b+href),403),engine)
@@ -97,7 +99,7 @@ def execute(browser,engine,b):
  p.keyboard.press('Enter');p.wait_for_url('**/usuario');p.goto(b+'/usuario/consultar?codigo=REC-2026-0002');scan(p,'reapertura-solicitada',engine)
  check('FLUJO-TECLADO','RNF-02;RNF-09','Consulta/cierre/reapertura con teclado, nuevo estado visible',lambda:'Reapertura solicitada' in p.inner_text('body'),engine)
  # One new account per motor confirms ownership, separate from the IP05 cohort.
- pub.goto(b+'/registro');pub.locator('#nombre').fill('Cuenta simulada '+engine);pub.locator('#documento').fill('qaCierre'+engine);pub.locator('#password').fill(PASSWORD);pub.get_by_role('button',name='Crear cuenta').click();login(pub,b,'qaCierre'+engine)
+ pub.goto(b+'/registro');pub.locator('#nombre').fill('Cuenta simulada '+engine);pub.locator('#documento').fill('qaCierre'+engine);pub.locator('#password').fill(PASSWORD);pub.get_by_role('button',name='Crear cuenta').click();pub.wait_for_url(b+'/login');login(pub,b,'qaCierre'+engine)
  check('CUENTA-PROPIA','RNF-05;RF-10','Cuenta nueva no hereda incidencias',lambda:'REC-2026-0001' not in pub.inner_text('body'),engine)
  pub.goto(b+'/usuario/reclamos/nuevo');pub.locator('#direccion').fill('Ubicación ficticia QA 100');pub.locator('#distrito').fill('Lima');pub.locator('#tipoIncidencia').select_option('Fuga de agua');pub.locator('#prioridad').select_option('Alta');pub.locator('#descripcion').fill('Incidencia simulada para comprobar asociación al titular.');pub.get_by_role('button',name='Registrar y generar código').click();pub.wait_for_load_state()
  code=pub.locator('#codigo-reclamo').inner_text();check('VINCULO-TITULAR','RNF-05;RF-01','Incidencia registrada en cuenta nueva',lambda:code.startswith('REC-'),engine)

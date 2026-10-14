@@ -1,0 +1,7 @@
+﻿codigo,estado,fecha_registro,fecha_ultima,fecha_completa,evidencias,consultable_titular,completo,causa,fuente,datos
+REC-2026-0007,Atendido,2026-10-14T17:07:50.758079,2026-10-14T17:07:50.826694,True,0,False,False,Sin evidencia asociada,EVIDENCIAS_NUEVAS/02_JAVA_FINAL/IP05/medicion.json,SIMULADOS
+REC-2026-0006,Reapertura solicitada,2026-10-14T17:07:50.623805,2026-10-14T17:07:50.745911,True,1,True,True,Elementos completos,EVIDENCIAS_NUEVAS/02_JAVA_FINAL/IP05/medicion.json,SIMULADOS
+REC-2026-0005,Cerrado,2026-10-14T17:07:50.458036,2026-10-14T17:07:50.604417,True,1,True,True,Elementos completos,EVIDENCIAS_NUEVAS/02_JAVA_FINAL/IP05/medicion.json,SIMULADOS
+REC-2026-0004,Atendido,2026-10-14T17:07:50.269325,2026-10-14T17:07:50.427973,True,1,False,False,Evidencia restringida pendiente de revisión/publicación,EVIDENCIAS_NUEVAS/02_JAVA_FINAL/IP05/medicion.json,SIMULADOS
+REC-2026-0003,Atendido,2026-10-14T17:07:48.179116,2026-10-14T17:07:48.204412,True,0,False,False,Sin evidencia asociada,EVIDENCIAS_NUEVAS/02_JAVA_FINAL/IP05/medicion.json,SIMULADOS
+REC-2026-0002,Atendido,2026-10-14T17:07:48.056903,2026-10-14T17:07:50.229234,True,1,True,True,Elementos completos,EVIDENCIAS_NUEVAS/02_JAVA_FINAL/IP05/medicion.json,SIMULADOS

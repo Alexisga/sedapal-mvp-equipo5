@@ -1,0 +1,5 @@
+# Protocolo de usabilidad pendiente
+
+Estado PENDIENTE DE PERSONA. Se necesitan cinco participantes reales y un moderador. El caso de referencia de la prueba automatizada fue REC-2026-0002; antes de una sesión humana debe iniciarse una demo autorizada y confirmar que el titular puede abrir una evidencia publicada. Los servidores de esta auditoría fueron detenidos. No usar un caso sin adjunto ni sustituir tiempo humano por latencia.
+
+Tarea: desde la pantalla inicial y con el código entregado, identificar correctamente estado, última actualización y evidencia. Inicio: se entrega tarea/código con pantalla lista. Fin: la persona identifica los tres elementos. Registrar tiempo individual, errores, abandonos y ayuda. No guiar durante la tarea. Guardar cinco fichas reales y evidencias anonimizadas. Calcular promedio de intentos completados y contrastar con ≤30s; reportar por separado fallos/abandonos y no declarar éxito solo con la media. No hay participantes ni tiempos registrados en esta entrega.

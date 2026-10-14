@@ -1,0 +1,10 @@
+﻿id,comprobacion,revisor_nombre,independiente_del_autor,fecha,resultado,hallazgo,evidencia_revisada,conformidad,firma_o_referencia_aprobacion
+1,Confirmar versiones y hashes,,,,,,,,
+2,Revisar IP05 incluyendo los tres casos incompletos,,,,,,,,
+3,Inspeccionar permisos de evidencia,,,,,,,,
+4,Revisar 156 scans y axe incomplete,,,,,,,,
+5,"Evaluar semántica, teclado y ayudas técnicas",,,,,,,,
+6,Revisar TLS local y límites de despliegue,,,,,,,,
+7,Comprobar cada HU y sus nueve DoD,,,,,,,,
+8,Validar propuestas para matriz v1.12,,,,,,,,
+9,Revisar defectos cerrados/abiertos y seguimiento,,,,,,,,

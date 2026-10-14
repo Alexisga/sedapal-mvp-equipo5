@@ -1,0 +1,11 @@
+﻿RF,HU,estado,resultado,evidencia,fuente_aprobada,commit
+RF-01,HU-01,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,VINCULO-TITULAR;INCIDENCIA-AJENA;registro-incidencia,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-02,HU-01,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,VINCULO-TITULAR;INCIDENCIA-AJENA;registro-incidencia,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-03,HU-02,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,consulta-publica;seguimiento-sin-evidencia;atendido-evidencia,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-04,HU-02,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,consulta-publica;seguimiento-sin-evidencia;atendido-evidencia,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-05,HU-03,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,ADJUNTO-OCULTO;ADJUNTO-TITULAR;ADJUNTO-AJENO;IP05,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-06,HU-04,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,notificaciones;HU04CadaTransicion (antecedente Java),Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-07,HU-05,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,AJENO-cerrar;FLUJO-TECLADO;cerrado-reapertura-form,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-08,HU-06,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,AJENO-reapertura;FLUJO-TECLADO;reapertura-solicitada,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-09,HU-07,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,atencion-tecnica;revision-evidencia;resultado-carga;IP05,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04
+RF-10,HU-08,VERIFICADO,Implementado y probado en escenarios identificados; HU NO DONE,ERROR-ARIA;CUENTA-PROPIA;VINCULO-TITULAR;LOGOUT;TLS-03;CierreAccesibilidadSeguridadTest,Catálogo v1.4; Borrador v1.9,4aad20366da34c617148a0b56ad7c5c575e30c04

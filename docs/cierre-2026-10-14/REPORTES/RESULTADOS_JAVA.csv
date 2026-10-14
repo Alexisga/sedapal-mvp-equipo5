@@ -1,0 +1,4 @@
+﻿id,segundos,estado,archivo
+com.utp.sedapal.CierreAccesibilidadSeguridadTest.clavesDemoSonHashRobustoConfiguradoSinClaveDebilAnterior,0.73,PASS,TEST-com.utp.sedapal.CierreAccesibilidadSeguridadTest.xml
+com.utp.sedapal.CierreAccesibilidadSeguridadTest.errorServidorEstaVinculadoAlCampoYSinReexponerClave,0.905,PASS,TEST-com.utp.sedapal.CierreAccesibilidadSeguridadTest.xml
+com.utp.sedapal.CompletitudIP05IntegrationTest.mideTodosLosExpedientesElegiblesSinDescartarIncompletos,1.188,PASS,TEST-com.utp.sedapal.CompletitudIP05IntegrationTest.xml

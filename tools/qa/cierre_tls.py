@@ -40,7 +40,7 @@ with (OUT/'servidor-tls.log').open('wb') as log:
   record('TLS-01','Handshake TLS validando certificado y nombre de host',lambda:client.open(base+'/login').status==200)
   def reject_unknown():
    try:build_opener(HTTPSHandler(context=ssl.create_default_context())).open(base+'/login');return False
-  except Exception as e:
+   except Exception as e:
     assert isinstance(getattr(e,'reason',None),ssl.SSLCertVerificationError),repr(e)
     return {'certificado_no_confiado_rechazado':True,'tipo':type(e.reason).__name__}
   record('TLS-02','La confianza predeterminada rechaza el certificado autofirmado',reject_unknown)

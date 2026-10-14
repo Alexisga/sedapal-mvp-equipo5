@@ -1,0 +1,14 @@
+﻿aspecto,estado,resultado,que_se_necesita,quien_resuelve
+Fuentes e integridad CM,VERIFICADO,46/46 registros originales coinciden; oficiales sin escritura,Nada para la verificación local,Codex ejecutado
+IP05 medición,VERIFICADO,3/6 = 50.00%; NO cumple meta ≥90%,"Consultar los casos, sin elevar el porcentaje con selección de éxitos",Codex ejecutado
+IP05 subsanación,PENDIENTE DE PERSONA,Dos sin adjuntos y uno pendiente de revisión,Evidencia auténtica/simulada válida que corresponda a los casos; decisión de operación/PO si exige cambiar reglas de atención,Operador responsable y Product Owner/delegado
+Accesibilidad automatizada,VERIFICADO,156 scans WCAG A/AA sin violaciones detectadas,No equivale a revisión humana o certificación,Codex ejecutado
+Accesibilidad humana,PENDIENTE DE PERSONA,108 entradas axe incomplete y revisión semántica pendiente,"Persona revisa contexto, lector de pantalla/ayudas y tareas completas",Revisor accesibilidad del equipo
+Responsividad y motores,VERIFICADO,"Chrome, Edge, Firefox, WebKit; 360/768/1366",Límites headless y emulación documentados,Codex ejecutado
+Safari/dispositivo físico,PENDIENTE DE ENTORNO/AUTORIZACIÓN,No ejecutado,Safari/iOS y dispositivos disponibles para prueba; después completar ficha,Equipo facilita entorno; persona designada prueba
+Seguridad y HTTPS local,VERIFICADO,6/6 TLS PASS y permisos probados,No equivale a despliegue público,Codex ejecutado
+HTTPS de despliegue,PENDIENTE DE ENTORNO/AUTORIZACIÓN,Sin publicación,"Entorno autorizado, DNS/certificado y configuración de despliegue",Administrador y responsable delegado
+Usabilidad RNF03,PENDIENTE DE PERSONA,Sin medición humana,Cinco personas y moderador; fichas vacías listas,Equipo 5 y participantes reales
+PPQA independiente,PENDIENTE DE PERSONA,Sin conformidad independiente,Revisor distinto del implementador completa checklist,Revisor designado por Equipo 5
+Matriz y APF2 oficial,PENDIENTE DE PERSONA,Propuestas preparadas; originales no editados,Validar e incorporar CSV y redactar APF2 formal sin inventar eventos,Responsable delegado/encargado documental
+GitHub y Drive,PENDIENTE DE ENTORNO/AUTORIZACIÓN,Estructuras locales listas; nada publicado,"URL de repositorio, carpeta Drive y permisos/destinos autorizados explícitamente",Propietario del repositorio y carpeta compartida
