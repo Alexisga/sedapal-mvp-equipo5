@@ -50,8 +50,8 @@
             <label for="motivo">Motivo de reapertura</label><textarea id="motivo" name="motivo" class="form-control" minlength="10" maxlength="500" required></textarea><button class="btn btn-sedapal">Solicitar reapertura</button></form>
             <h3 class="h6 mt-4">Progreso general</h3>
             <div class="timeline" aria-label="Estados del reclamo">
-                <div class="timeline-step" th:each="estado, iter : ${estados}" th:classappend="${iter.index <= estadoIndex} ? ' active' : ''">
-                    <strong th:text="${estado.nombre}">Estado</strong><span class="visually-hidden" th:if="${iter.index <= estadoIndex}"> completado</span>
+                <div class="timeline-step" th:each="estado, iter : ${estados}" th:classappend="${estadosRecorridos.contains(estado.nombre)} ? ' active' : ''">
+                    <strong th:text="${estado.nombre}">Estado</strong><span class="visually-hidden" th:if="${estadosRecorridos.contains(estado.nombre)}"> completado</span>
                 </div>
             </div>
             <div class="row g-4 mt-3">

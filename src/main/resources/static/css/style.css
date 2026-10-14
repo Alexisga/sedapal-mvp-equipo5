@@ -1,11 +1,11 @@
 :root {
     --sedapal-blue: #0056a0;
     --sedapal-blue-dark: #064273;
-    --sedapal-sky: #00a3e0;
+    --sedapal-sky: #006080;
     --sedapal-light: #f4f8fb;
     --sedapal-gray: #dce6ee;
     --sedapal-dark: #17324d;
-    --focus: #ffbf47;
+    --focus: #064273;
 }
 
 html { scroll-behavior: smooth; }

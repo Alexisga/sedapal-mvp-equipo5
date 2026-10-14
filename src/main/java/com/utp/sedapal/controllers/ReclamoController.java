@@ -81,6 +81,7 @@ public class ReclamoController {
             model.addAttribute("estadoIndex", reclamoService.posicionEstado(reclamo.get()));
             model.addAttribute("ordenes", reclamoService.listarOrdenesPorReclamo(reclamo.get().getId()));
             var historial = reclamoService.listarHistorial(reclamo.get().getId());
+            model.addAttribute("estadosRecorridos", historial.stream().map(h -> h.getEstado().getNombre()).collect(java.util.stream.Collectors.toSet()));
             model.addAttribute("historial", historial);
             // El historial se recupera ordenado cronológicamente en ReclamoService.
             // Si todavía no existe una transición, usar la fecha de registro.

@@ -83,6 +83,14 @@ class IncrementoIntegrationTest {
   var e=archivos.guardar(new MockMultipartFile("evidencia","cifrado.pdf","application/pdf",bytes),"QA",a);
   assertThat(e.isVisibleCiudadano()).isFalse();assertThat(java.nio.file.Files.readAllBytes(java.nio.file.Path.of(e.getRuta()))).isEqualTo(bytes);
  }
+ @Test void HU08AceptaNombreDisponibleDeUnCaracterYNormalizaEspacios() throws Exception {
+  mvc.perform(post("/registro").with(csrf()).param("nombre","QA").param("documento"," x ").param("password","ClaveQA123")).andExpect(status().is3xxRedirection());
+  assertThat(auth.buscarPorDocumento("x")).isPresent();
+ }
+ @Test void HU02ProgresoNoMarcaEtapasQueNuncaOcurrieron() throws Exception {
+  var r=mvc.perform(get("/usuario/consultar").param("codigo","REC-2026-0003").with(user("87654321").roles("USUARIO"))).andExpect(status().isOk()).andReturn();
+  assertThat(java.util.regex.Pattern.compile("timeline-step\\s+active").matcher(r.getResponse().getContentAsString()).results().count()).isEqualTo(2);
+ }
  @Autowired MockMvc mvc; @Autowired ReclamoService reclamos; @Autowired AuthService auth;
  @Autowired RegistroService registro; @Autowired PasswordEncoder encoder; @Autowired EvidenciaService evidencias;
  @Autowired ArchivoService archivos; @Autowired EvidenciaRepository er;
