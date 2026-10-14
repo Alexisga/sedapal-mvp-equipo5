@@ -10,21 +10,21 @@
                 <div class="brand-mark brand-mark-large mb-4" aria-hidden="true">S</div>
                 <h1 id="titulo-sistema" class="display-5 fw-bold">SEDAPAL Reclamos</h1>
                 <p class="lead mt-3">Gestión y seguimiento de reclamos técnicos de agua potable en Lima y Callao.</p>
-                <p class="mb-0">Proyecto Final · UTP · Java 21, Spring Boot y MySQL</p>
+                <p class="mb-0">Proyecto académico · UTP</p>
             </div>
         </section>
         <section class="col-lg-6 d-flex align-items-center justify-content-center p-4" aria-labelledby="titulo-login">
             <div class="panel w-100" style="max-width: 480px;">
                 <div class="panel-header">
                     <h2 id="titulo-login" class="h4 mb-1">Iniciar sesión</h2>
-                    <p class="small-muted mb-0">Ingrese el documento y la contraseña del rol que desea demostrar.</p>
+                    <p class="small-muted mb-0">Ingrese su documento o nombre de usuario y contraseña.</p>
                 </div>
                 <div class="panel-body">
                     <div th:replace="~{fragments/common :: alerts}"></div>
                     <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
                         <div class="mb-3">
-                            <label class="form-label" for="documento">Documento</label>
-                            <input class="form-control" id="documento" name="documento" inputmode="numeric"
+                            <label class="form-label" for="documento">Documento o nombre de usuario</label>
+                            <input class="form-control" id="documento" name="documento" 
                                    autocomplete="username" placeholder="Ej. 12345678" required autofocus>
                             <div class="invalid-feedback">Ingrese el documento.</div>
                         </div>

@@ -21,6 +21,12 @@ public class Evidencia {
     private LocalDateTime fechaCarga;
     private String descripcion;
     private boolean visibleCiudadano;
+    private String revisadoPor;
+    private LocalDateTime fechaRevision;
+    public String getRevisadoPor(){return revisadoPor;}
+    public void setRevisadoPor(String v){revisadoPor=v;}
+    public LocalDateTime getFechaRevision(){return fechaRevision;}
+    public void setFechaRevision(LocalDateTime v){fechaRevision=v;}
     public boolean isVisibleCiudadano(){return visibleCiudadano;}
     public void setVisibleCiudadano(boolean v){visibleCiudadano=v;}
 

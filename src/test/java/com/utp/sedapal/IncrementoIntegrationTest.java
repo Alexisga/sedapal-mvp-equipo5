@@ -20,6 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 @SpringBootTest @AutoConfigureMockMvc @ActiveProfiles("test") @Transactional
 class IncrementoIntegrationTest {
+ private byte[] pdfValido() {
+  try(var d=new org.apache.pdfbox.pdmodel.PDDocument();var out=new java.io.ByteArrayOutputStream()){
+   d.addPage(new org.apache.pdfbox.pdmodel.PDPage());d.save(out);return out.toByteArray();
+  }catch(java.io.IOException e){throw new IllegalStateException(e);}
+ }
+ @Test void RNF06RechazaPdfConFirmaPeroSinEstructura() {
+  assertThatThrownBy(()->archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf","%PDF-1.4\ncontenido falso\n%%EOF".getBytes()),"QA",new AtencionTecnica())).isInstanceOf(IllegalArgumentException.class);
+ }
+
  @Autowired MockMvc mvc; @Autowired ReclamoService reclamos; @Autowired AuthService auth;
  @Autowired RegistroService registro; @Autowired PasswordEncoder encoder; @Autowired EvidenciaService evidencias;
  @Autowired ArchivoService archivos; @Autowired EvidenciaRepository er;
@@ -57,7 +66,7 @@ class IncrementoIntegrationTest {
  }
  @Test void HU03HU07RevisionYDescargaExigeTitular()throws Exception {
   var o=ordenes.findAll().getFirst();var a=new AtencionTecnica();a.setOrden(o);a.setAccionesRealizadas("QA ficticia");a.setResultado("QA ficticia");ar.save(a);
-  var e=archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf","%PDF-1.4\nQA ficticia\n%%EOF".getBytes()),"QA",a);
+  var e=archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf",pdfValido()),"QA",a);
   assertThat(evidencias.listar(o.getReclamo().getId(),"12345678")).isEmpty();
   assertThatThrownBy(()->evidencias.abrir(e.getId(),"12345678")).isInstanceOf(org.springframework.security.access.AccessDeniedException.class);
   evidencias.publicar(e.getId(),"22222222");assertThat(evidencias.abrir(e.getId(),"12345678").contenido()).isNotEmpty();
@@ -70,8 +79,8 @@ class IncrementoIntegrationTest {
  @Test void RNF06RechazaExcesoTamanoYConteo() {
   assertThatThrownBy(()->archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf",new byte[5*1024*1024+1]),"QA",new AtencionTecnica())).isInstanceOf(IllegalArgumentException.class);
   var a=new AtencionTecnica();a.setOrden(ordenes.findAll().getFirst());a.setAccionesRealizadas("QA");a.setResultado("QA");ar.save(a);
-  for(int n=0;n<5;n++)archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf","%PDF-1.4\n%%EOF".getBytes()),"QA",a);
-  assertThatThrownBy(()->archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf","%PDF-1.4\n%%EOF".getBytes()),"QA",a)).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("cinco");
+  for(int n=0;n<5;n++)archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf",pdfValido()),"QA",a);
+  assertThatThrownBy(()->archivos.guardar(new MockMultipartFile("evidencia","qa.pdf","application/pdf",pdfValido()),"QA",a)).isInstanceOf(IllegalArgumentException.class).hasMessageContaining("cinco");
  }
  @Test void HU04AvisosNoSeMezclan() {
   var u=auth.requerirPorDocumento("12345678");var ns=notificaciones.listar(u.getId());assertThat(ns).isNotEmpty().allMatch(n->n.getUsuario().getId().equals(u.getId()) && n.getFecha()!=null && n.getMensaje().contains(n.getReclamo().getCodigo()));

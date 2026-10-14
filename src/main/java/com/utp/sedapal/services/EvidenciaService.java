@@ -7,8 +7,8 @@ import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 @Service @Transactional(readOnly=true)
 public class EvidenciaService {
- private final EvidenciaRepository repo; private final AuthService auth; private final ReclamoRepository reclamos;
- public EvidenciaService(EvidenciaRepository r,AuthService a,ReclamoRepository c){repo=r;auth=a;reclamos=c;}
+ private final EvidenciaRepository repo; private final AuthService auth; private final ReclamoRepository reclamos; private final AuditoriaService auditoria;
+ public EvidenciaService(EvidenciaRepository r,AuthService a,ReclamoRepository c,AuditoriaService auditoria){repo=r;auth=a;reclamos=c;this.auditoria=auditoria;}
  public record Adjunto(Long id,String nombre,boolean visible){}
  public List<Adjunto> listar(Long id,String doc){
   var u=auth.requerirPorDocumento(doc);var r=reclamos.findById(id).orElseThrow();
@@ -18,7 +18,8 @@ public class EvidenciaService {
  private Evidencia requerir(Long id){return repo.findById(id).orElseThrow(()->new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND));}
  @Transactional public void publicar(Long id,String doc){
   if(auth.requerirPorDocumento(doc).getRol()!=RolUsuario.OPERADOR)throw new AccessDeniedException("Acceso denegado.");
-  requerir(id).setVisibleCiudadano(true);
+  var e=requerir(id);e.setVisibleCiudadano(true);e.setRevisadoPor(doc);e.setFechaRevision(java.time.LocalDateTime.now());
+  auditoria.registrar(doc,"PUBLICAR_EVIDENCIA","Evidencia",id,"Consulta ciudadana habilitada tras revisión.");
  }
  public record Archivo(String nombre,String tipo,byte[] contenido){}
  public Archivo abrir(Long id,String doc) throws java.io.IOException {
