@@ -17,3 +17,9 @@ Definir `DEMO_PASSWORD` por entorno (mínimo ocho caracteres, única para la dem
 No publicar target, bases, adjuntos, .env, claves privadas ni credenciales. Historial antecedente contiene valores de ejemplo y claves sintéticas de pruebas antiguas, sin validez en el despliegue; se conservan para preservar trazabilidad, nunca deben reutilizarse. Los README antiguos son documentos históricos y sus instrucciones de versión anterior no sustituyen este README. Las credenciales de ejecución actual se suministran únicamente por entorno.
 
 La documentación oficial Word/Excel se conserva en Drive; propuestas de actualización están separadas. Flujo de CI manual/PR con permisos de lectura. No se agregan colaboradores ni se comparte públicamente documentación.
+
+## Publicación verificada · 14/10/2026
+
+Repositorio privado: https://github.com/Alexisga/sedapal-mvp-equipo5. Documentación restringida: https://drive.google.com/drive/folders/1T5AY5WP8QlTUfERQerTPwIMU8C7WG0Tg. Demo pública autorizada en Render Free: https://sedapal-mvp-equipo5.onrender.com.
+
+Código desplegado ea97f87900262905b1bb59da6df947205e21769b. Regresión Java local 51 PASS; sobre HTTPS público, 7 checks TLS/HTTP y 131 de navegador PASS. Evidencias y límites en docs/publicacion-2026-10-14. Auto Sync del Blueprint desactivado; próximos despliegues manuales. Credencial demo únicamente en el entorno privado Render. IP05 y validaciones humanas continúan pendientes; ninguna HU Done.
